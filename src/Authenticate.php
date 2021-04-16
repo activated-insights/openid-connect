@@ -124,7 +124,7 @@ class Authenticate
         }
 
         if ($this->challenge !== null) {
-            $parameters['code_challenge'] = $this->challenge;
+            $parameters['code_challenge'] = $this->parseChallengeAsParameterString();
         }
 
         if ($this->identityProvider !== null) {
@@ -136,5 +136,14 @@ class Authenticate
         }
 
         return $parameters;
+    }
+
+    private function parseChallengeAsParameterString(): string
+    {
+        $binaryHash       = hash('sha256', $this->challenge, true);
+        $base64Encoded    = base64_encode($binaryHash);
+
+        // Convert from standard Base64 encoding to Base64Url encoding.
+        return rtrim(strtr($base64Encoded, '+/', '-_'), '=');
     }
 }
