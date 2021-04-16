@@ -14,9 +14,6 @@ use Pinnacle\OpenidConnect\Dtos\UserInfoDto;
 use Pinnacle\OpenidConnect\Exceptions\OAuthFailedException;
 use stdClass;
 
-/**
- * Class RequestUserInfo
- */
 class RequestUserInfo
 {
     /**

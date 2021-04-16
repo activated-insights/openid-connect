@@ -8,10 +8,7 @@ use Pinnacle\CommonValueObjects\EmailAddress;
 use Pinnacle\OpenidConnect\Exceptions\OAuthFailedException;
 use stdClass;
 
-/**
- * Data from an OpenID Connect 1.0 USERINFO endpoint.
- */
-final class UserInfoDto
+class UserInfoDto
 {
     private string       $subjectIdentifier;
 
