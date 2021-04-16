@@ -22,22 +22,21 @@ class Authorize
 
     private ?string      $accessToken = null;
 
-    private ?UserInfoDto $userInfo    = null;
+    private ?UserInfoDto $userInfo = null;
 
     /**
      * State nonce verification should happen prior to this
      *
-     * @param Uri|string  $redirectUri
      * @param string|null $codeVerifier Only used if PKCE was used initially.
      */
     public function __construct(
         ProviderDto $providerDto,
-        $redirectUri,
+        Uri $redirectUri,
         string $authorizationCode,
         ?string $codeVerifier = null
     ) {
         $this->providerDto       = $providerDto;
-        $this->redirectUri       = $redirectUri instanceof Uri ? $redirectUri : new Uri($redirectUri);
+        $this->redirectUri       = $redirectUri;
         $this->authorizationCode = $authorizationCode;
         $this->codeVerifier      = $codeVerifier;
     }
