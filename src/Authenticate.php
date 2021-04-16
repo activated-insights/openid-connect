@@ -34,11 +34,14 @@ class Authenticate
 
     private ?string          $challenge       = null;
 
-    public function __construct(ProviderDto $providerDto, ResponseType $responseType, Uri $redirectUri)
+    /**
+     * @param Uri|string $redirectUri
+     */
+    public function __construct(ProviderDto $providerDto, ResponseType $responseType, $redirectUri)
     {
         $this->providerDto  = $providerDto;
         $this->responseType = $responseType;
-        $this->redirectUri  = $redirectUri;
+        $this->redirectUri  = $redirectUri instanceof Uri ? $redirectUri : new Uri($redirectUri);
     }
 
     public function getAuthRedirectUrl(): Uri
