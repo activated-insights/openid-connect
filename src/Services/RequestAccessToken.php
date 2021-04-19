@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenidConnect\Services;
+namespace Pinnacle\OpenIdConnect\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -10,8 +10,8 @@ use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Utils;
 use InvalidArgumentException;
-use Pinnacle\OpenidConnect\Dtos\ProviderDto;
-use Pinnacle\OpenidConnect\Exceptions\OAuthFailedException;
+use Pinnacle\OpenIdConnect\Dtos\ProviderDto;
+use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
 use stdClass;
 
 class RequestAccessToken
@@ -61,6 +61,7 @@ class RequestAccessToken
                             $provider->getClientSecret(),
                         ],
                         RequestOptions::FORM_PARAMS => $formParams,
+                        RequestOptions::TIMEOUT => 15, // in seconds
                     ]
                 );
         } catch (GuzzleException $exception) {

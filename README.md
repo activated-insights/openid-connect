@@ -56,10 +56,3 @@ $authorize->getUserInfo(); // To get the userInfoDto.
 // e.g. getting the user's subject identifier:
 return $authorize->getUserInfo()->getSubjectIdentifier();
 ```
-
-## Caveats
-This library does not verify the state for you.
-If a state was provided in the `Authenticate` class, you should verify the state provided on the callback query prior to requesting authorization.
-
-This library does not provide any challenge codes.
-You will need to create the challenge codes yourself

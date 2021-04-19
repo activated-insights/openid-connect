@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenidConnect\Exceptions;
+namespace Pinnacle\OpenIdConnect\Exceptions;
 
 use DomainException;
 

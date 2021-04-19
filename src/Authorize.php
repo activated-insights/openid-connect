@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenidConnect;
+namespace Pinnacle\OpenIdConnect;
 
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenidConnect\Dtos\ProviderDto;
-use Pinnacle\OpenidConnect\Dtos\UserInfoDto;
-use Pinnacle\OpenidConnect\Services\RequestAccessToken;
-use Pinnacle\OpenidConnect\Services\RequestUserInfo;
+use Pinnacle\OpenIdConnect\Dtos\ProviderDto;
+use Pinnacle\OpenIdConnect\Dtos\UserInfoDto;
+use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
+use Pinnacle\OpenIdConnect\Services\RequestAccessToken;
+use Pinnacle\OpenIdConnect\Services\RequestUserInfo;
 
 class Authorize
 {
@@ -25,26 +26,32 @@ class Authorize
     private ?UserInfoDto $userInfo    = null;
 
     /**
-     * State nonce verification should happen prior to this
-     *
-     * @param Uri|string  $redirectUri
-     * @param string|null $codeVerifier Only used if PKCE was used initially.
+     * @param Uri|string $redirectUri
+     * @param string     $savedState    The state saved in the session
+     * @param string     $returnedState The state returned in the callback query
      */
     public function __construct(
         ProviderDto $providerDto,
         $redirectUri,
         string $authorizationCode,
-        ?string $codeVerifier = null
+        string $savedState,
+        string $returnedState,
+        string $codeVerifier
     ) {
-        $this->providerDto       = $providerDto;
-        $this->redirectUri       = $redirectUri instanceof Uri ? $redirectUri : new Uri($redirectUri);
+        $this->providerDto = $providerDto;
+        $this->redirectUri = $redirectUri instanceof Uri ? $redirectUri : new Uri($redirectUri);
         $this->authorizationCode = $authorizationCode;
         $this->codeVerifier      = $codeVerifier;
+
+        if ($this->redirectUri->getScheme() !== 'https') {
+            throw new OAuthFailedException('Redirect URI must use https');
+        }
+
+        if ($savedState !== $returnedState) {
+            throw new OAuthFailedException('State mismatch');
+        }
     }
 
-    /**
-     * Any verification for state nonce should be done prior to requesting authorization
-     */
     public function getAccessToken(): string
     {
         if ($this->accessToken === null) {
@@ -59,9 +66,6 @@ class Authorize
         return $this->accessToken;
     }
 
-    /**
-     * Any verification for state nonce should be done prior to requesting information
-     */
     public function getUserInfo(): UserInfoDto
     {
         if ($this->userInfo === null) {

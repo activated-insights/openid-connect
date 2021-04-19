@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenidConnect\Services;
+namespace Pinnacle\OpenIdConnect\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Utils;
 use InvalidArgumentException;
-use Pinnacle\OpenidConnect\Dtos\ProviderDto;
-use Pinnacle\OpenidConnect\Dtos\UserInfoDto;
-use Pinnacle\OpenidConnect\Exceptions\OAuthFailedException;
+use Pinnacle\OpenIdConnect\Dtos\ProviderDto;
+use Pinnacle\OpenIdConnect\Dtos\UserInfoDto;
+use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
 use stdClass;
 
 class RequestUserInfo
@@ -42,6 +42,7 @@ class RequestUserInfo
                         RequestOptions::HEADERS => [
                             'Authorization' => 'Bearer ' . $accessToken,
                         ],
+                        RequestOptions::TIMEOUT => 15, // in seconds
                     ]
                 );
         } catch (GuzzleException $exception) {

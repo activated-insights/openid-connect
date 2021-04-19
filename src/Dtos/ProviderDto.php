@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenidConnect\Dtos;
+namespace Pinnacle\OpenIdConnect\Dtos;
 
 use GuzzleHttp\Psr7\Uri;
 

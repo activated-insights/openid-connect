@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenidConnect\Dtos;
+namespace Pinnacle\OpenIdConnect\Dtos;
 
 use Pinnacle\CommonValueObjects\EmailAddress;
-use Pinnacle\OpenidConnect\Exceptions\OAuthFailedException;
+use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
 use stdClass;
 
 class UserInfoDto

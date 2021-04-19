@@ -2,46 +2,52 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenidConnect;
+namespace Pinnacle\OpenIdConnect;
 
 use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenidConnect\Dtos\ProviderDto;
-use Pinnacle\OpenidConnect\Enums\ChallengeMethod;
-use Pinnacle\OpenidConnect\Enums\IdentityProvider;
-use Pinnacle\OpenidConnect\Enums\ResponseType;
+use Pinnacle\OpenIdConnect\Dtos\ProviderDto;
+use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
 
 class Authenticate
 {
-    private ProviderDto  $providerDto;
+    private ProviderDto $providerDto;
 
-    private ResponseType $responseType;
+    private string      $responseType;
 
-    private Uri          $redirectUri;
+    private Uri         $redirectUri;
 
-    private ?string      $state            = null;
-
-    private ?string      $identityProvider = null;
-
-    private ?string      $idpIdentifier    = null;
+    private string      $state;
 
     /**
      * @var string[]
      */
-    private array            $scopes          = [];
+    private array  $scopes;
 
-    private ?ChallengeMethod $challengeMethod = null;
+    private string $challengeMethod;
 
-    private ?string          $challenge       = null;
+    private string $challenge;
 
     /**
      * @param Uri|string $redirectUri
      */
-    public function __construct(ProviderDto $providerDto, ResponseType $responseType, $redirectUri)
-    {
+    public function __construct(
+        ProviderDto $providerDto,
+        $redirectUri
+    ) {
         $this->providerDto  = $providerDto;
-        $this->responseType = $responseType;
         $this->redirectUri  = $redirectUri instanceof Uri ? $redirectUri : new Uri($redirectUri);
+
+        if($this->redirectUri->getScheme() !== 'https') {
+            throw new OAuthFailedException('Redirect URI must use https');
+        }
+
+        // Default values
+        $this->responseType = 'code';
+        $this->state           = self::generateRandomString();
+        $this->scopes          = ['openid', 'profile', 'email'];
+        $this->challengeMethod = 'S256';
+        $this->challenge       = self::generateRandomString(64);
     }
 
     public function getAuthRedirectUrl(): Uri
@@ -53,32 +59,18 @@ class Authenticate
             ->withQuery(Query::build($parameters));
     }
 
-    public function withState(string $state): self
+    public function getState(): string
     {
-        $this->state = $state;
+        return $this->state;
+    }
 
-        return $this;
+    public function getChallenge(): string
+    {
+        return $this->challenge;
     }
 
     /**
-     * @param IdentityProvider|string $identityProvider
-     */
-    public function withIdentityProvider($identityProvider): self
-    {
-        $this->identityProvider = $identityProvider;
-
-        return $this;
-    }
-
-    public function withIdpIdentifier(?string $idpIdentifier): self
-    {
-        $this->idpIdentifier = $idpIdentifier;
-
-        return $this;
-    }
-
-    /**
-     * @param [string|string[]] $value
+     * @param [string|string[]] $value openid, profile, and email scopes are already added.
      */
     public function addScope($scope): self
     {
@@ -91,59 +83,49 @@ class Authenticate
         return $this;
     }
 
-    public function withChallenge(ChallengeMethod $challengeMethod, string $challenge): self
-    {
-        $this->challengeMethod = $challengeMethod;
-        $this->challenge       = $challenge;
-
-        return $this;
-    }
-
     /**
      * @return mixed[]
      */
     private function buildParameters(): array
     {
-        $parameters = [
+        $scopes = array_unique($this->scopes);
+
+        return [
             // Use the authorization code flow so that tokens are not exposed to the client browser.
-            'response_type' => $this->responseType->getValue(),
-            'client_id'     => $this->providerDto->getClientId(),
-            'redirect_uri'  => (string)$this->redirectUri,
+            'response_type'         => $this->responseType,
+            'client_id'             => $this->providerDto->getClientId(),
+            'redirect_uri'          => (string)$this->redirectUri,
+            'scope'                 => implode(' ', $scopes),
+            'state'                 => $this->state,
+            'code_challenge_method' => $this->challengeMethod,
+            'code_challenge'        => $this->parseChallengeAsParameterString(),
         ];
-
-        if (count($this->scopes) > 0) {
-            $parameters['scope'] = implode(' ', $this->scopes);
-        }
-
-        if ($this->state !== null) {
-            $parameters['state'] = $this->state;
-        }
-
-        if ($this->challengeMethod !== null) {
-            $parameters['code_challenge_method'] = $this->challengeMethod->getValue();
-        }
-
-        if ($this->challenge !== null) {
-            $parameters['code_challenge'] = $this->parseChallengeAsParameterString();
-        }
-
-        if ($this->identityProvider !== null) {
-            $parameters['identity_provider'] = $this->identityProvider;
-        }
-
-        if ($this->idpIdentifier !== null) {
-            $parameters['idp_identifier'] = $this->idpIdentifier;
-        }
-
-        return $parameters;
     }
 
     private function parseChallengeAsParameterString(): string
     {
-        $binaryHash       = hash('sha256', $this->challenge, true);
-        $base64Encoded    = base64_encode($binaryHash);
+        $binaryHash    = hash('sha256', $this->challenge, true);
+        $base64Encoded = base64_encode($binaryHash);
 
         // Convert from standard Base64 encoding to Base64Url encoding.
         return rtrim(strtr($base64Encoded, '+/', '-_'), '=');
+    }
+
+    /**
+     *
+     */
+    private static function generateRandomString($length = 16): string
+    {
+        $string = '';
+
+        while (($len = strlen($string)) < $length) {
+            $size = $length - $len;
+
+            $bytes = random_bytes($size);
+
+            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+        }
+
+        return $string;
     }
 }
