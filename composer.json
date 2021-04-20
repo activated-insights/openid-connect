@@ -1,0 +1,22 @@
+{
+    "name": "pinnacle/openid-connect",
+    "description": "library for use in handling OAuth requests",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": ">=7.4",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "pinnacle/common-value-objects": "^1.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pinnacle/OpenIdConnect\\": "src/"
+        }
+    },
+    "repositories": {
+        "common-value-objects": {
+            "type": "vcs",
+            "url": "https://github.com/pinnacleqi/common-value-objects"
+        }
+    }
+}
