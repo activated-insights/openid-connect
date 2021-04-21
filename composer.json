@@ -10,7 +10,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Pinnacle/OpenIdConnect\\": "src/"
+            "Pinnacle\\OpenIdConnect\\": "src/"
         }
     },
     "repositories": {
