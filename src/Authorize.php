@@ -10,20 +10,23 @@ use Pinnacle\OpenIdConnect\Dtos\UserInfoDto;
 use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
 use Pinnacle\OpenIdConnect\Services\RequestAccessToken;
 use Pinnacle\OpenIdConnect\Services\RequestUserInfo;
+use Psr\Log\LoggerInterface;
 
 class Authorize
 {
-    private ProviderDto  $providerDto;
+    private ProviderDto      $providerDto;
 
-    private Uri          $redirectUri;
+    private Uri              $redirectUri;
 
-    private string       $authorizationCode;
+    private string           $authorizationCode;
 
-    private ?string      $codeVerifier;
+    private ?string          $codeVerifier;
 
-    private ?string      $accessToken = null;
+    private ?string          $accessToken = null;
 
-    private ?UserInfoDto $userInfo    = null;
+    private ?UserInfoDto     $userInfo    = null;
+
+    private ?LoggerInterface $logger;
 
     /**
      * @param Uri|string $redirectUri
@@ -31,17 +34,19 @@ class Authorize
      * @param string     $returnedState The state returned in the callback query
      */
     public function __construct(
-        ProviderDto $providerDto,
-        $redirectUri,
-        string $authorizationCode,
-        string $savedState,
-        string $returnedState,
-        string $codeVerifier
+        ProviderDto      $providerDto,
+                         $redirectUri,
+        string           $authorizationCode,
+        string           $savedState,
+        string           $returnedState,
+        string           $codeVerifier,
+        ?LoggerInterface $logger = null
     ) {
-        $this->providerDto = $providerDto;
-        $this->redirectUri = $redirectUri instanceof Uri ? $redirectUri : new Uri($redirectUri);
+        $this->providerDto       = $providerDto;
+        $this->redirectUri       = $redirectUri instanceof Uri ? $redirectUri : new Uri($redirectUri);
         $this->authorizationCode = $authorizationCode;
         $this->codeVerifier      = $codeVerifier;
+        $this->logger            = $logger;
 
         if ($this->redirectUri->getScheme() !== 'https') {
             throw new OAuthFailedException('Redirect URI must use https');
@@ -59,7 +64,8 @@ class Authorize
                 $this->providerDto,
                 $this->redirectUri,
                 $this->authorizationCode,
-                $this->codeVerifier
+                $this->codeVerifier,
+                $this->logger
             );
         }
 
@@ -69,7 +75,7 @@ class Authorize
     public function getUserInfo(): UserInfoDto
     {
         if ($this->userInfo === null) {
-            $this->userInfo = RequestUserInfo::execute($this->providerDto, $this->getAccessToken());
+            $this->userInfo = RequestUserInfo::execute($this->providerDto, $this->getAccessToken(), $this->logger);
         }
 
         return $this->userInfo;

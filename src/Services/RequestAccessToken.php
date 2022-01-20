@@ -12,17 +12,19 @@ use GuzzleHttp\Utils;
 use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Dtos\ProviderDto;
 use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
+use Psr\Log\LoggerInterface;
 use stdClass;
 
 class RequestAccessToken
 {
     public static function execute(
-        ProviderDto $providerDto,
-        Uri $redirectUri,
-        string $authorizationCode,
-        ?string $codeVerifier = null
+        ProviderDto      $providerDto,
+        Uri              $redirectUri,
+        string           $authorizationCode,
+        ?string          $codeVerifier = null,
+        ?LoggerInterface $logger = null
     ): string {
-        $response = self::requestTokens($providerDto, $redirectUri, $authorizationCode, $codeVerifier);
+        $response = self::requestTokens($providerDto, $redirectUri, $authorizationCode, $codeVerifier, $logger);
 
         return self::accessTokenFromJsonResponse($response);
     }
@@ -31,10 +33,11 @@ class RequestAccessToken
      * @param Uri $redirectUri Must be the same as the initial redirect uri
      */
     private static function requestTokens(
-        ProviderDto $provider,
-        Uri $redirectUri,
-        string $authorizationCode,
-        ?string $codeVerifier = null
+        ProviderDto      $provider,
+        Uri              $redirectUri,
+        string           $authorizationCode,
+        ?string          $codeVerifier = null,
+        ?LoggerInterface $logger = null
     ): stdClass {
         try {
             $client = new Client();
@@ -50,6 +53,15 @@ class RequestAccessToken
                 $formParams['code_verifier'] = $codeVerifier;
             }
 
+            $logger?->debug(
+                sprintf(
+                    'OIDC: Sending POST to %s with parameters %s and client ID %s.',
+                    $provider->getTokenEndpoint(),
+                    Utils::jsonEncode($formParams),
+                    $provider->getClientId()
+                )
+            );
+
             $request = $client
                 ->request(
                     'POST',
@@ -61,7 +73,7 @@ class RequestAccessToken
                             $provider->getClientSecret(),
                         ],
                         RequestOptions::FORM_PARAMS => $formParams,
-                        RequestOptions::TIMEOUT => 15, // in seconds
+                        RequestOptions::TIMEOUT     => 15, // in seconds
                     ]
                 );
         } catch (GuzzleException $exception) {
@@ -69,7 +81,11 @@ class RequestAccessToken
         }
 
         try {
-            $jsonObject = Utils::jsonDecode($request->getBody()->getContents());
+            $response = $request->getBody()->getContents();
+
+            $logger?->debug(sprintf('OIDC: Received OAuth TOKENS endpoint response: %s.', $response));
+
+            $jsonObject = Utils::jsonDecode($response);
             assert($jsonObject instanceof stdClass);
 
             return $jsonObject;

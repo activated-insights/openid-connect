@@ -1,12 +1,13 @@
 {
     "name": "pinnacle/openid-connect",
-    "description": "library for use in handling OAuth requests",
+    "description": "Library for OpenID Connect 1.0 relying party (RP) use.",
     "type": "library",
     "license": "proprietary",
     "require": {
-        "php": ">=7.4",
+        "php": "~8.0.0 || ~8.1.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "pinnacle/common-value-objects": "^1.10"
+        "pinnacle/common-value-objects": "^1.10",
+        "psr/log": "^1.1"
     },
     "autoload": {
         "psr-4": {
