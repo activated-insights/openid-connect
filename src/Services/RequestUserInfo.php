@@ -12,6 +12,7 @@ use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Dtos\ProviderDto;
 use Pinnacle\OpenIdConnect\Dtos\UserInfoDto;
 use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
+use Psr\Log\LoggerInterface;
 use stdClass;
 
 class RequestUserInfo
@@ -19,9 +20,12 @@ class RequestUserInfo
     /**
      * @throws OAuthFailedException
      */
-    public static function execute(ProviderDto $provider, string $accessToken): UserInfoDto
-    {
-        $jsonResponse = self::requestUserInfo($provider, $accessToken);
+    public static function execute(
+        ProviderDto      $provider,
+        string           $accessToken,
+        ?LoggerInterface $logger = null
+    ): UserInfoDto {
+        $jsonResponse = self::requestUserInfo($provider, $accessToken, $logger);
 
         return UserInfoDto::createWithJson($jsonResponse);
     }
@@ -29,10 +33,15 @@ class RequestUserInfo
     /**
      * @throws OAuthFailedException
      */
-    private static function requestUserInfo(ProviderDto $provider, string $accessToken): stdClass
-    {
+    private static function requestUserInfo(
+        ProviderDto      $provider,
+        string           $accessToken,
+        ?LoggerInterface $logger = null
+    ): stdClass {
         try {
             $client = new Client();
+
+            $logger?->debug(sprintf('OIDC: Sending GET to %s.', $provider->getUserInfoEndpoint()));
 
             $request = $client
                 ->request(
@@ -50,7 +59,11 @@ class RequestUserInfo
         }
 
         try {
-            $jsonObject = Utils::jsonDecode($request->getBody()->getContents());
+            $response = $request->getBody()->getContents();
+
+            $logger?->debug(sprintf('OIDC: Received OAuth USERINFO endpoint response: %s.', $response));
+
+            $jsonObject = Utils::jsonDecode($response);
             assert($jsonObject instanceof stdClass);
 
             return $jsonObject;
