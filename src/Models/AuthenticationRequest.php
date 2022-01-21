@@ -30,7 +30,7 @@ class AuthenticationRequest
         $this->codeChallenge = $this->generateCodeChallenge();
     }
 
-    public function getUrl(): Uri
+    public function getAuthenticationRequestUrl(): Uri
     {
         return $this->provider
             ->getAuthorizationEndpoint()
