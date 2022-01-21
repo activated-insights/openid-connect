@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenIdConnect\Dtos;
+namespace Pinnacle\OpenIdConnect\Models;
 
 use Pinnacle\CommonValueObjects\EmailAddress;
-use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
+use Pinnacle\OpenIdConnect\Exceptions\OpenIdRequestFailedException;
 use stdClass;
 
-class UserInfoDto
+class UserInfo
 {
     private string       $subjectIdentifier;
 
@@ -31,25 +31,25 @@ class UserInfoDto
     }
 
     /**
-     * @throws OAuthFailedException
+     * @throws OpenIdRequestFailedException
      */
     public static function createWithJson(stdClass $json): self
     {
         if (!isset($json->sub) || !is_string($json->sub)) {
-            throw new OAuthFailedException('The subject identifier of the user was not found.');
+            throw new OpenIdRequestFailedException('The subject identifier of the user was not found.');
         }
         if (!isset($json->name) || !is_string($json->name)) {
-            throw new OAuthFailedException('The name of the user was not found.');
+            throw new OpenIdRequestFailedException('The name of the user was not found.');
         }
         if (!isset($json->email) || !is_string($json->email)) {
-            throw new OAuthFailedException('The email address of the user was not found.');
+            throw new OpenIdRequestFailedException('The email address of the user was not found.');
         }
 
         // The email_verified value is not always returned. Handle as a special case.
         if (isset($json->email_verified)) {
             // Sometimes it's passed as a string value, even though the spec says it should be a boolean.
             if (!is_string($json->email_verified) && !is_bool($json->email_verified)) {
-                throw new OAuthFailedException(
+                throw new OpenIdRequestFailedException(
                     'The email verification value of the user was set, but is not a string or boolean value.'
                 );
             }

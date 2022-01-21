@@ -9,32 +9,32 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Utils;
 use InvalidArgumentException;
-use Pinnacle\OpenIdConnect\Dtos\ProviderDto;
-use Pinnacle\OpenIdConnect\Dtos\UserInfoDto;
-use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
+use Pinnacle\OpenIdConnect\Models\Provider;
+use Pinnacle\OpenIdConnect\Models\UserInfo;
+use Pinnacle\OpenIdConnect\Exceptions\OpenIdRequestFailedException;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
 class RequestUserInfo
 {
     /**
-     * @throws OAuthFailedException
+     * @throws OpenIdRequestFailedException
      */
     public static function execute(
-        ProviderDto      $provider,
+        Provider         $provider,
         string           $accessToken,
         ?LoggerInterface $logger = null
-    ): UserInfoDto {
+    ): UserInfo {
         $jsonResponse = self::requestUserInfo($provider, $accessToken, $logger);
 
-        return UserInfoDto::createWithJson($jsonResponse);
+        return UserInfo::createWithJson($jsonResponse);
     }
 
     /**
-     * @throws OAuthFailedException
+     * @throws OpenIdRequestFailedException
      */
     private static function requestUserInfo(
-        ProviderDto      $provider,
+        Provider         $provider,
         string           $accessToken,
         ?LoggerInterface $logger = null
     ): stdClass {
@@ -55,7 +55,7 @@ class RequestUserInfo
                     ]
                 );
         } catch (GuzzleException $exception) {
-            throw new OAuthFailedException('Unable to retrieve UserInfo from USERINFO endpoint.', 0, $exception);
+            throw new OpenIdRequestFailedException('Unable to retrieve UserInfo from USERINFO endpoint.', 0, $exception);
         }
 
         try {
@@ -68,7 +68,7 @@ class RequestUserInfo
 
             return $jsonObject;
         } catch (InvalidArgumentException $exception) {
-            throw new OAuthFailedException('Unable to parse JSON response from USERINFO endpoint.', 0, $exception);
+            throw new OpenIdRequestFailedException('Unable to parse JSON response from USERINFO endpoint.', 0, $exception);
         }
     }
 }

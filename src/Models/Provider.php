@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenIdConnect\Dtos;
+namespace Pinnacle\OpenIdConnect\Models;
 
 use GuzzleHttp\Psr7\Uri;
+use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
 
-class ProviderDto
+class Provider implements ProviderInterface
 {
     private string $clientId;
 
@@ -21,9 +22,9 @@ class ProviderDto
     public function __construct(
         string $clientId,
         string $clientSecret,
-        Uri $authorizationEndpoint,
-        Uri $tokenEndpoint,
-        Uri $userInfoEndpoint
+        Uri    $authorizationEndpoint,
+        Uri    $tokenEndpoint,
+        Uri    $userInfoEndpoint
     ) {
         $this->clientId              = $clientId;
         $this->clientSecret          = $clientSecret;
