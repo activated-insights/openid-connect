@@ -96,7 +96,7 @@ class Authenticator
      * @throws OpenIdConnectException
      * @throws AccessTokenNotFoundException
      */
-    public function fetchAccessTokenWithAuthorizationCode(
+    public function fetchTokensWithAuthorizationCode(
         AuthorizationCodeResponse $authorizationCodeResponse
     ): AccessTokenResponse {
         $tokenRequestor = new TokenRequestor(
