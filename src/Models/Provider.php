@@ -9,28 +9,19 @@ use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
 
 class Provider implements ProviderInterface
 {
-    private string $clientId;
-
-    private string $clientSecret;
-
-    private Uri    $authorizationEndpoint;
-
-    private Uri    $tokenEndpoint;
-
-    private Uri    $userInfoEndpoint;
-
     public function __construct(
-        string $clientId,
-        string $clientSecret,
-        Uri    $authorizationEndpoint,
-        Uri    $tokenEndpoint,
-        Uri    $userInfoEndpoint
+        private mixed  $identifier,
+        private string $clientId,
+        private string $clientSecret,
+        private Uri    $authorizationEndpoint,
+        private Uri    $tokenEndpoint,
+        private Uri    $userInfoEndpoint
     ) {
-        $this->clientId              = $clientId;
-        $this->clientSecret          = $clientSecret;
-        $this->authorizationEndpoint = $authorizationEndpoint;
-        $this->tokenEndpoint         = $tokenEndpoint;
-        $this->userInfoEndpoint      = $userInfoEndpoint;
+    }
+
+    public function getIdentifier(): mixed
+    {
+        return $this->identifier;
     }
 
     public function getClientId(): string

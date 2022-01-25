@@ -6,6 +6,8 @@ use GuzzleHttp\Psr7\Uri;
 
 interface ProviderInterface
 {
+    public function getIdentifier(): mixed;
+
     public function getClientId(): string;
 
     public function getClientSecret(): string;
