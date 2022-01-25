@@ -26,6 +26,9 @@ class RequestTokens
     ) {
     }
 
+    /**
+     * @throws OpenIdRequestException
+     */
     public function getAccessTokenForAuthorizationCode(string $authorizationCode): string
     {
         $response = $this->requestTokens($authorizationCode);
@@ -33,6 +36,9 @@ class RequestTokens
         return $this->accessTokenFromJsonResponse($response);
     }
 
+    /**
+     * @throws OpenIdRequestException
+     */
     private function requestTokens(string $authorizationCode): stdClass
     {
         try {
