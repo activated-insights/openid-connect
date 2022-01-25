@@ -2,102 +2,119 @@
 
 namespace Pinnacle\OpenIdConnect\Models;
 
-use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
+use Pinnacle\OpenIdConnect\Exceptions\AuthenticationRequestException;
+use Pinnacle\OpenIdConnect\Exceptions\MissingRequiredQueryParametersException;
+use Pinnacle\OpenIdConnect\Models\Constants\AuthenticationRequestParameterKey;
 
 class AuthenticationRequest
 {
-    private const                 DEFAULT_SCOPES        = ['openid', 'profile', 'email'];
-
-    private const                 CODE_CHALLENGE_METHOD = 'S256';
-
-    private const                 RESPONSE_TYPE         = 'code';
-
     /**
      * @var string[]
      */
-    private array  $scopes;
+    private array   $rawQueryParams;
 
-    private string $state;
+    private ?string $authorizationCode = null;
 
-    private string $codeChallenge;
+    private ?string $state             = null;
 
-    public function __construct(private ProviderInterface $provider, private Uri $redirectUri)
+    private ?string $challenge         = null;
+
+    private ?string $errorCode         = null;
+
+    private ?string $errorDescription  = null;
+
+    /**
+     * @throws MissingRequiredQueryParametersException
+     * @throws AuthenticationRequestException
+     */
+    public function __construct(Uri $callbackUri)
     {
-        $this->scopes        = self::DEFAULT_SCOPES;
-        $this->state         = $this->generateRandomString();
-        $this->codeChallenge = $this->generateCodeChallenge();
+        $this->parseQueryParameters($callbackUri);
+
+        $this->assertWithoutError();
+
+        $this->assertHasRequiredParameters();
     }
 
-    public function getAuthenticationRequestUrl(): Uri
+    public function getAuthorizationCode(): string
     {
-        return $this->provider
-            ->getAuthorizationEndpoint()
-            ->withQuery(Query::build($this->buildParameters()));
+        if ($this->authorizationCode === null) {
+            throw new MissingRequiredQueryParametersException(AuthenticationRequestParameterKey::CODE());
+        }
+
+        return $this->authorizationCode;
     }
 
     public function getState(): string
     {
+        if ($this->state === null) {
+            throw new MissingRequiredQueryParametersException(AuthenticationRequestParameterKey::STATE());
+        }
+
         return $this->state;
     }
 
-    public function getCodeChallenge(): string
+    public function getChallenge(): string
     {
-        return $this->codeChallenge;
-    }
+        if ($this->challenge === null) {
+            throw new MissingRequiredQueryParametersException(AuthenticationRequestParameterKey::CHALLENGE());
+        }
 
-    public function getRedirectUri(): Uri
-    {
-        return $this->redirectUri;
-    }
-
-    public function addScope(string $scope)
-    {
-        $this->scopes[] = $scope;
+        return $this->challenge;
     }
 
     /**
-     * @return array
+     * @param Uri $callbackUri
+     *
+     * @return void
      */
-    private function buildParameters(): array
+    private function parseQueryParameters(Uri $callbackUri): void
     {
-        $this->state = $this->generateRandomString() . ',' . $this->provider->getClientId();
+        $this->rawQueryParams = [];
+        parse_str($callbackUri->getQuery(), $this->rawQueryParams);
 
-        return [
-            // Use the authorization code flow so that tokens are not exposed to the client browser.
-            'response_type'         => self::RESPONSE_TYPE,
-            'client_id'             => $this->provider->getClientId(),
-            'redirect_uri'          => (string)$this->redirectUri,
-            'scope'                 => implode(' ', $this->scopes),
-            'state'                 => $this->state,
-            'code_challenge_method' => self::CODE_CHALLENGE_METHOD,
-            'code_challenge'        => $this->generateCodeChallenge(),
-        ];
+        $this->authorizationCode = $this->findQueryParameter(AuthenticationRequestParameterKey::CODE());
+        $this->state             = $this->findQueryParameter(AuthenticationRequestParameterKey::STATE());
+        $this->challenge         = $this->findQueryParameter(AuthenticationRequestParameterKey::CHALLENGE());
+        $this->errorCode         = $this->findQueryParameter(AuthenticationRequestParameterKey::ERROR());
+        $this->errorDescription  = $this->findQueryParameter(AuthenticationRequestParameterKey::ERROR_DESCRIPTION());
     }
 
-    private function generateCodeChallenge(): string
+    private function findQueryParameter(AuthenticationRequestParameterKey $parameterKey): ?string
     {
-        $randomString  = $this->generateRandomString(64);
-        $binaryHash    = hash('sha256', $randomString, true);
-        $base64Encoded = base64_encode($binaryHash);
-
-        // Convert from standard Base64 encoding to Base64Url encoding.
-        return rtrim(strtr($base64Encoded, '+/', '-_'), '=');
-    }
-
-    private function generateRandomString($length = 16): string
-    {
-        $string = '';
-
-        while (($len = strlen($string)) < $length) {
-            $size = $length - $len;
-
-            $bytes = random_bytes($size);
-
-            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+        if (isset($this->rawQueryParams[$parameterKey->getValue()])) {
+            return $this->rawQueryParams[$parameterKey->getValue()];
         }
 
-        return $string;
+        return null;
+    }
+
+    private function assertWithoutError(): void
+    {
+        if ($this->errorCode !== null) {
+            throw new AuthenticationRequestException(
+                $this->errorCode,
+                $this->errorDescription
+            );
+        }
+    }
+
+    /**
+     * @throws MissingRequiredQueryParametersException
+     */
+    private function assertHasRequiredParameters()
+    {
+        if ($this->authorizationCode === null) {
+            throw new MissingRequiredQueryParametersException(AuthenticationRequestParameterKey::CODE());
+        }
+
+        if ($this->state === null) {
+            throw new MissingRequiredQueryParametersException(AuthenticationRequestParameterKey::STATE());
+        }
+
+        if ($this->challenge === null) {
+            throw new MissingRequiredQueryParametersException(AuthenticationRequestParameterKey::CHALLENGE());
+        }
     }
 }
