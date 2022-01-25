@@ -11,14 +11,14 @@ use GuzzleHttp\Utils;
 use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Models\Provider;
 use Pinnacle\OpenIdConnect\Models\UserInfo;
-use Pinnacle\OpenIdConnect\Exceptions\OpenIdRequestFailedException;
+use Pinnacle\OpenIdConnect\Exceptions\OpenIdRequestException;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
 class RequestUserInfo
 {
     /**
-     * @throws OpenIdRequestFailedException
+     * @throws OpenIdRequestException
      */
     public static function execute(
         Provider         $provider,
@@ -31,7 +31,7 @@ class RequestUserInfo
     }
 
     /**
-     * @throws OpenIdRequestFailedException
+     * @throws OpenIdRequestException
      */
     private static function requestUserInfo(
         Provider         $provider,
@@ -55,7 +55,7 @@ class RequestUserInfo
                     ]
                 );
         } catch (GuzzleException $exception) {
-            throw new OpenIdRequestFailedException('Unable to retrieve UserInfo from USERINFO endpoint.', 0, $exception);
+            throw new OpenIdRequestException('Unable to retrieve UserInfo from USERINFO endpoint.', 0, $exception);
         }
 
         try {
@@ -68,7 +68,7 @@ class RequestUserInfo
 
             return $jsonObject;
         } catch (InvalidArgumentException $exception) {
-            throw new OpenIdRequestFailedException('Unable to parse JSON response from USERINFO endpoint.', 0, $exception);
+            throw new OpenIdRequestException('Unable to parse JSON response from USERINFO endpoint.', 0, $exception);
         }
     }
 }
