@@ -4,11 +4,11 @@ namespace Pinnacle\OpenIdConnect;
 
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
-use Pinnacle\OpenIdConnect\Exceptions\AuthenticationRequestException;
+use Pinnacle\OpenIdConnect\Exceptions\AuthenticationConnectException;
 use Pinnacle\OpenIdConnect\Exceptions\InsecureUriProtocolException;
 use Pinnacle\OpenIdConnect\Exceptions\MismatchChallengeException;
 use Pinnacle\OpenIdConnect\Exceptions\MissingRequiredQueryParametersException;
-use Pinnacle\OpenIdConnect\Exceptions\OpenIdRequestException;
+use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
 use Pinnacle\OpenIdConnect\Exceptions\StatePersisterMissingValueException;
 use Pinnacle\OpenIdConnect\Models\AccessTokenResponse;
 use Pinnacle\OpenIdConnect\Models\AuthenticationRequest;
@@ -52,7 +52,7 @@ class Authenticator
 
     /**
      * @throws MissingRequiredQueryParametersException
-     * @throws AuthenticationRequestException
+     * @throws AuthenticationConnectException
      * @throws MismatchChallengeException
      * @throws StatePersisterMissingValueException
      */
@@ -87,7 +87,7 @@ class Authenticator
     }
 
     /**
-     * @throws OpenIdRequestException
+     * @throws OpenIdConnectException
      * @throws AccessTokenNotFoundException
      */
     public function fetchAccessTokenWithAuthorizationCode(

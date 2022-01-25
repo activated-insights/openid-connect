@@ -3,7 +3,7 @@
 namespace Pinnacle\OpenIdConnect\Models;
 
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenIdConnect\Exceptions\AuthenticationRequestException;
+use Pinnacle\OpenIdConnect\Exceptions\AuthenticationConnectException;
 use Pinnacle\OpenIdConnect\Exceptions\MissingRequiredQueryParametersException;
 use Pinnacle\OpenIdConnect\Models\Constants\AuthenticationRequestParameterKey;
 
@@ -26,7 +26,7 @@ class AuthenticationRequest
 
     /**
      * @throws MissingRequiredQueryParametersException
-     * @throws AuthenticationRequestException
+     * @throws AuthenticationConnectException
      */
     public function __construct(Uri $callbackUri)
     {
@@ -93,7 +93,7 @@ class AuthenticationRequest
     private function assertWithoutError(): void
     {
         if ($this->errorCode !== null) {
-            throw new AuthenticationRequestException(
+            throw new AuthenticationConnectException(
                 $this->errorCode,
                 $this->errorDescription
             );

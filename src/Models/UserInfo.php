@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pinnacle\OpenIdConnect\Models;
 
 use Pinnacle\CommonValueObjects\EmailAddress;
-use Pinnacle\OpenIdConnect\Exceptions\OpenIdRequestException;
+use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
 use stdClass;
 
 class UserInfo
@@ -31,25 +31,25 @@ class UserInfo
     }
 
     /**
-     * @throws OpenIdRequestException
+     * @throws OpenIdConnectException
      */
     public static function createWithJson(stdClass $json): self
     {
         if (!isset($json->sub) || !is_string($json->sub)) {
-            throw new OpenIdRequestException('The subject identifier of the user was not found.');
+            throw new OpenIdConnectException('The subject identifier of the user was not found.');
         }
         if (!isset($json->name) || !is_string($json->name)) {
-            throw new OpenIdRequestException('The name of the user was not found.');
+            throw new OpenIdConnectException('The name of the user was not found.');
         }
         if (!isset($json->email) || !is_string($json->email)) {
-            throw new OpenIdRequestException('The email address of the user was not found.');
+            throw new OpenIdConnectException('The email address of the user was not found.');
         }
 
         // The email_verified value is not always returned. Handle as a special case.
         if (isset($json->email_verified)) {
             // Sometimes it's passed as a string value, even though the spec says it should be a boolean.
             if (!is_string($json->email_verified) && !is_bool($json->email_verified)) {
-                throw new OpenIdRequestException(
+                throw new OpenIdConnectException(
                     'The email verification value of the user was set, but is not a string or boolean value.'
                 );
             }

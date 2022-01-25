@@ -9,6 +9,6 @@ use DomainException;
 /**
  * An exception thrown when OAuth authentication fails.
  */
-class OpenIdRequestException extends DomainException
+class OpenIdConnectException extends DomainException
 {
 }

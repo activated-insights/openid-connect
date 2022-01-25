@@ -12,7 +12,7 @@ use GuzzleHttp\Utils;
 use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
-use Pinnacle\OpenIdConnect\Exceptions\OpenIdRequestException;
+use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
@@ -27,7 +27,7 @@ class TokenRequestor
     }
 
     /**
-     * @throws OpenIdRequestException
+     * @throws OpenIdConnectException
      * @throws AccessTokenNotFoundException
      */
     public function getAccessTokenForAuthorizationCode(string $authorizationCode): string
@@ -38,7 +38,7 @@ class TokenRequestor
     }
 
     /**
-     * @throws OpenIdRequestException
+     * @throws OpenIdConnectException
      */
     private function requestTokens(string $authorizationCode): stdClass
     {
@@ -77,7 +77,7 @@ class TokenRequestor
                     ]
                 );
         } catch (GuzzleException $exception) {
-            throw new OpenIdRequestException('Unable to retrieve OAuth tokens from IdP endpoint.', 0, $exception);
+            throw new OpenIdConnectException('Unable to retrieve OAuth tokens from IdP endpoint.', 0, $exception);
         }
 
         try {
@@ -90,7 +90,7 @@ class TokenRequestor
 
             return $jsonObject;
         } catch (InvalidArgumentException $exception) {
-            throw new OpenIdRequestException('Unable to parse JSON response from TOKENS endpoint.', 0, $exception);
+            throw new OpenIdConnectException('Unable to parse JSON response from TOKENS endpoint.', 0, $exception);
         }
     }
 

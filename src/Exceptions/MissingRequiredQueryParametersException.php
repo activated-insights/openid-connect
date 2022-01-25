@@ -4,7 +4,7 @@ namespace Pinnacle\OpenIdConnect\Exceptions;
 
 use Pinnacle\OpenIdConnect\Models\Constants\AuthenticationRequestParameterKey;
 
-class MissingRequiredQueryParametersException extends OpenIdRequestException
+class MissingRequiredQueryParametersException extends OpenIdConnectException
 {
     public function __construct(AuthenticationRequestParameterKey $parameterKey)
     {

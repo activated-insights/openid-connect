@@ -2,6 +2,6 @@
 
 namespace Pinnacle\OpenIdConnect\Exceptions;
 
-class MismatchChallengeException extends OpenIdRequestException
+class MismatchChallengeException extends OpenIdConnectException
 {
 }

@@ -2,6 +2,6 @@
 
 namespace Pinnacle\OpenIdConnect\Exceptions;
 
-class StatePersisterMissingValueException extends OpenIdRequestException
+class StatePersisterMissingValueException extends OpenIdConnectException
 {
 }
