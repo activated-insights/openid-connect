@@ -7,7 +7,8 @@
         "php": "~8.0.0 || ~8.1.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "pinnacle/common-value-objects": "^1.10",
-        "psr/log": "^1.1"
+        "psr/log": "^1.1",
+        "myclabs/php-enum": "^1.8"
     },
     "autoload": {
         "psr-4": {
