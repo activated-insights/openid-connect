@@ -7,18 +7,18 @@ use MyCLabs\Enum\Enum;
 /**
  * Response error codes as described in @see https://openid.net/specs/openid-connect-core-1_0.html#AuthError
  *
- * @method static AuthenticationRequestErrorCode INVALID_REQUEST
- * @method static AuthenticationRequestErrorCode INTERACTION_REQUIRED
- * @method static AuthenticationRequestErrorCode LOGIN_REQUIRED
- * @method static AuthenticationRequestErrorCode ACCOUNT_SELECTION_REQUIRED
- * @method static AuthenticationRequestErrorCode CONSENT_REQUIRED
- * @method static AuthenticationRequestErrorCode INVALID_REQUEST_URI
- * @method static AuthenticationRequestErrorCode INVALID_REQUEST_OBJECT
- * @method static AuthenticationRequestErrorCode REQUEST_NOT_SUPPORTED
- * @method static AuthenticationRequestErrorCode REQUEST_URI_NOT_SUPPORTED
- * @method static AuthenticationRequestErrorCode REGISTRATION_NOT_SUPPORTED
+ * @method static AuthenticationErrorCode INVALID_REQUEST
+ * @method static AuthenticationErrorCode INTERACTION_REQUIRED
+ * @method static AuthenticationErrorCode LOGIN_REQUIRED
+ * @method static AuthenticationErrorCode ACCOUNT_SELECTION_REQUIRED
+ * @method static AuthenticationErrorCode CONSENT_REQUIRED
+ * @method static AuthenticationErrorCode INVALID_REQUEST_URI
+ * @method static AuthenticationErrorCode INVALID_REQUEST_OBJECT
+ * @method static AuthenticationErrorCode REQUEST_NOT_SUPPORTED
+ * @method static AuthenticationErrorCode REQUEST_URI_NOT_SUPPORTED
+ * @method static AuthenticationErrorCode REGISTRATION_NOT_SUPPORTED
  */
-class AuthenticationRequestErrorCode extends Enum
+class AuthenticationErrorCode extends Enum
 {
     const INVALID_REQUEST            = 'invalid_request';
 
