@@ -2,34 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenIdConnect\Models;
+namespace Pinnacle\OpenIdConnect\Provider;
 
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
+use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 
 class ProviderConfiguration implements ProviderConfigurationInterface
 {
     public function __construct(
-        private mixed  $identifier,
-        private string $clientId,
-        private string $clientSecret,
-        private Uri    $authorizationEndpoint,
-        private Uri    $tokenEndpoint,
-        private Uri    $userInfoEndpoint
+        private ?Identifier  $identifier,
+        private ClientId     $clientId,
+        private ClientSecret $clientSecret,
+        private Uri          $authorizationEndpoint,
+        private Uri          $tokenEndpoint,
+        private Uri          $userInfoEndpoint
     ) {
     }
 
-    public function getIdentifier(): mixed
+    public function getIdentifier(): ?Identifier
     {
         return $this->identifier;
     }
 
-    public function getClientId(): string
+    public function getClientId(): ClientId
     {
         return $this->clientId;
     }
 
-    public function getClientSecret(): string
+    public function getClientSecret(): ClientSecret
     {
         return $this->clientSecret;
     }

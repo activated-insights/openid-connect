@@ -2,7 +2,7 @@
 
 namespace Pinnacle\OpenIdConnect\Models;
 
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
+use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 
 class AuthenticationTokensResponse
 {

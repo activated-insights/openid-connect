@@ -5,9 +5,12 @@ namespace Pinnacle\OpenIdConnect\Services;
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Exceptions\StatePersisterMissingValueException;
 use Pinnacle\OpenIdConnect\Models\Constants\StateKey;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Models\Contracts\StatePersisterInterface;
-use Pinnacle\OpenIdConnect\Models\ProviderConfiguration;
+use Pinnacle\OpenIdConnect\Provider\ClientId;
+use Pinnacle\OpenIdConnect\Provider\ClientSecret;
+use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
+use Pinnacle\OpenIdConnect\Provider\Identifier;
+use Pinnacle\OpenIdConnect\Provider\ProviderConfiguration;
 
 class StatePersisterWrapper
 {
@@ -36,12 +39,15 @@ class StatePersisterWrapper
 
     public function storeProvider(ProviderConfigurationInterface $provider): void
     {
-        $this->storeValueWithKey(StateKey::PROVIDER_IDENTIFIER(), $provider->getIdentifier());
-        $this->storeValueWithKey(StateKey::PROVIDER_CLIENT_ID(), $provider->getClientId());
-        $this->storeValueWithKey(StateKey::PROVIDER_CLIENT_SECRET(), $provider->getClientSecret());
-        $this->storeValueWithKey(StateKey::PROVIDER_AUTHORIZATION_ENDPOINT(), $provider->getAuthorizationEndpoint());
-        $this->storeValueWithKey(StateKey::PROVIDER_TOKEN_ENDPOINT(), $provider->getTokenEndpoint());
-        $this->storeValueWithKey(StateKey::PROVIDER_USER_INFO_ENDPOINT(), $provider->getUserInfoEndpoint());
+        $this->storeValueWithKey(StateKey::PROVIDER_IDENTIFIER(), $provider->getIdentifier()?->getValue());
+        $this->storeValueWithKey(StateKey::PROVIDER_CLIENT_ID(), $provider->getClientId()->getValue());
+        $this->storeValueWithKey(StateKey::PROVIDER_CLIENT_SECRET(), $provider->getClientSecret()->getValue());
+        $this->storeValueWithKey(
+            StateKey::PROVIDER_AUTHORIZATION_ENDPOINT(),
+            (string)$provider->getAuthorizationEndpoint()
+        );
+        $this->storeValueWithKey(StateKey::PROVIDER_TOKEN_ENDPOINT(), (string)$provider->getTokenEndpoint());
+        $this->storeValueWithKey(StateKey::PROVIDER_USER_INFO_ENDPOINT(), (string)$provider->getUserInfoEndpoint());
     }
 
     /**
@@ -49,29 +55,29 @@ class StatePersisterWrapper
      */
     public function getProvider(): ProviderConfiguration
     {
-        $identifier            = $this->getValueWithStateKey(StateKey::PROVIDER_IDENTIFIER());
-        $clientId              = $this->getValueWithStateKey(StateKey::PROVIDER_CLIENT_ID());
-        $clientSecret          = $this->getValueWithStateKey(StateKey::PROVIDER_CLIENT_SECRET());
-        $authorizationEndpoint = $this->getValueWithStateKey(StateKey::PROVIDER_AUTHORIZATION_ENDPOINT());
-        $tokenEndpoint         = $this->getValueWithStateKey(StateKey::PROVIDER_TOKEN_ENDPOINT());
-        $userInfoEndpoint      = $this->getValueWithStateKey(StateKey::PROVIDER_USER_INFO_ENDPOINT());
+        $identifierValue            = $this->getValueWithStateKey(StateKey::PROVIDER_IDENTIFIER());
+        $clientIdValue              = $this->getValueWithStateKey(StateKey::PROVIDER_CLIENT_ID());
+        $clientSecretValue          = $this->getValueWithStateKey(StateKey::PROVIDER_CLIENT_SECRET());
+        $authorizationEndpointValue = $this->getValueWithStateKey(StateKey::PROVIDER_AUTHORIZATION_ENDPOINT());
+        $tokenEndpointValue         = $this->getValueWithStateKey(StateKey::PROVIDER_TOKEN_ENDPOINT());
+        $userInfoEndpointValue      = $this->getValueWithStateKey(StateKey::PROVIDER_USER_INFO_ENDPOINT());
 
-        if ($clientId === null ||
-            $clientSecret === null ||
-            $authorizationEndpoint === null ||
-            $tokenEndpoint === null ||
-            $userInfoEndpoint === null
+        if ($clientIdValue === null ||
+            $clientSecretValue === null ||
+            $authorizationEndpointValue === null ||
+            $tokenEndpointValue === null ||
+            $userInfoEndpointValue === null
         ) {
             throw new StatePersisterMissingValueException('Unable to retrieve the provider from state store.');
         }
 
         return new ProviderConfiguration(
-            $identifier,
-            $clientId,
-            $clientSecret,
-            $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $identifierValue !== null ? new Identifier($identifierValue) : null,
+            new ClientId($clientIdValue),
+            new ClientSecret($clientSecretValue),
+            new Uri($authorizationEndpointValue),
+            new Uri($tokenEndpointValue),
+            new Uri($userInfoEndpointValue)
         );
     }
 

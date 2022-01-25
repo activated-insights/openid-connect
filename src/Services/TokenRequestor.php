@@ -11,8 +11,8 @@ use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Utils;
 use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
+use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
@@ -47,7 +47,7 @@ class TokenRequestor
 
             $formParams = [
                 'grant_type'    => 'authorization_code',
-                'client_id'     => $this->provider->getClientId(),
+                'client_id'     => $this->provider->getClientId()->getValue(),
                 'redirect_uri'  => (string)$this->redirectUri,
                 'code'          => $authorizationCode,
                 'code_verifier' => $this->codeVerifier,
@@ -58,7 +58,7 @@ class TokenRequestor
                     'OIDC: Sending POST to %s with parameters %s and client ID %s.',
                     $this->provider->getTokenEndpoint(),
                     Utils::jsonEncode($formParams),
-                    $this->provider->getClientId()
+                    $this->provider->getClientId()->getValue()
                 )
             );
 
@@ -69,8 +69,8 @@ class TokenRequestor
                     [
                         // Authenticate with TOKEN endpoint using client ID and secret
                         RequestOptions::AUTH        => [
-                            $this->provider->getClientId(),
-                            $this->provider->getClientSecret(),
+                            $this->provider->getClientId()->getValue(),
+                            $this->provider->getClientSecret()->getValue(),
                         ],
                         RequestOptions::FORM_PARAMS => $formParams,
                         RequestOptions::TIMEOUT     => 15, // in seconds

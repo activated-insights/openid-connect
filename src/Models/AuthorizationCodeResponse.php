@@ -3,7 +3,8 @@
 namespace Pinnacle\OpenIdConnect\Models;
 
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
+use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
+use Pinnacle\OpenIdConnect\Provider\ProviderConfiguration;
 
 class AuthorizationCodeResponse
 {

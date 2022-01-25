@@ -5,21 +5,21 @@ namespace Pinnacle\OpenIdConnect;
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Exceptions\AuthorizationCodeCallbackException;
-use Pinnacle\OpenIdConnect\Exceptions\InsecureUriException;
 use Pinnacle\OpenIdConnect\Exceptions\ChallengeMismatchException;
+use Pinnacle\OpenIdConnect\Exceptions\InsecureUriException;
 use Pinnacle\OpenIdConnect\Exceptions\MissingRequiredQueryParametersException;
 use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
 use Pinnacle\OpenIdConnect\Exceptions\StatePersisterMissingValueException;
 use Pinnacle\OpenIdConnect\Models\AuthenticationTokensResponse;
-use Pinnacle\OpenIdConnect\Models\AuthorizationCodeCallbackData;
 use Pinnacle\OpenIdConnect\Models\AuthenticationUriBuilder;
+use Pinnacle\OpenIdConnect\Models\AuthorizationCodeCallbackData;
 use Pinnacle\OpenIdConnect\Models\AuthorizationCodeResponse;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Models\Contracts\StatePersisterInterface;
 use Pinnacle\OpenIdConnect\Models\UserInfo;
-use Pinnacle\OpenIdConnect\Services\TokenRequestor;
+use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Services\RequestUserInfo;
 use Pinnacle\OpenIdConnect\Services\StatePersisterWrapper;
+use Pinnacle\OpenIdConnect\Services\TokenRequestor;
 use Psr\Log\LoggerInterface;
 
 class Authenticator

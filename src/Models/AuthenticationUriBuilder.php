@@ -6,7 +6,7 @@ use Exception;
 use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
+use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 
 class AuthenticationUriBuilder
 {
@@ -65,7 +65,7 @@ class AuthenticationUriBuilder
         return [
             // Use the authorization code flow so that tokens are not exposed to the client browser.
             'response_type'         => self::RESPONSE_TYPE,
-            'client_id'             => $this->provider->getClientId(),
+            'client_id'             => $this->provider->getClientId()->getValue(),
             'redirect_uri'          => (string)$this->redirectUri,
             'scope'                 => implode(' ', $this->scopes),
             'state'                 => $this->state,
