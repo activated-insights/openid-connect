@@ -30,7 +30,7 @@ class TokenRequestor
      * @throws OpenIdConnectException
      * @throws AccessTokenNotFoundException
      */
-    public function getAccessTokenForAuthorizationCode(string $authorizationCode): string
+    public function fetchTokensForAuthorizationCode(string $authorizationCode): string
     {
         $response = $this->requestTokens($authorizationCode);
 

@@ -106,15 +106,16 @@ class Authenticator
             $this->logger
         );
 
-        $accessToken = $tokenRequestor->getAccessTokenForAuthorizationCode(
+        //TODO:: This will eventually return an object containing all the tokens. Currently it only returns the access token.
+        $accessToken = $tokenRequestor->fetchTokensForAuthorizationCode(
             $authorizationCodeResponse->getAuthorizationCode()
         );
 
         return new AuthenticationTokensResponse($accessToken, $authorizationCodeResponse->getProvider());
     }
 
-    public function fetchUserInformationWithAccessToken(AuthenticationTokensResponse $authenticationTokensResponse): UserInfo
-    {
+    public function fetchUserInformationWithAccessToken(AuthenticationTokensResponse $authenticationTokensResponse
+    ): UserInfo {
         // TODO:: We will be replacing this call and instead be parsing the JWT.
         return RequestUserInfo::execute(
             $authenticationTokensResponse->getProvider(),
