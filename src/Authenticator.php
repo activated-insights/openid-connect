@@ -3,70 +3,117 @@
 namespace Pinnacle\OpenIdConnect;
 
 use GuzzleHttp\Psr7\Uri;
+use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
+use Pinnacle\OpenIdConnect\Exceptions\AuthenticationRequestException;
 use Pinnacle\OpenIdConnect\Exceptions\InsecureUriProtocolException;
-use Pinnacle\OpenIdConnect\Exceptions\MismatchStateException;
+use Pinnacle\OpenIdConnect\Exceptions\MismatchChallengeException;
+use Pinnacle\OpenIdConnect\Exceptions\MissingRequiredQueryParametersException;
+use Pinnacle\OpenIdConnect\Exceptions\OpenIdRequestException;
+use Pinnacle\OpenIdConnect\Exceptions\StatePersisterMissingValueException;
+use Pinnacle\OpenIdConnect\Models\AccessTokenResponse;
 use Pinnacle\OpenIdConnect\Models\AuthenticationRequest;
-use Pinnacle\OpenIdConnect\Models\Contracts\AuthenticationResponseInterface;
+use Pinnacle\OpenIdConnect\Models\AuthenticationUriBuilder;
+use Pinnacle\OpenIdConnect\Models\AuthorizationCodeResponse;
 use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
+use Pinnacle\OpenIdConnect\Models\Contracts\StatePersisterInterface;
 use Pinnacle\OpenIdConnect\Models\UserInfo;
-use Pinnacle\OpenIdConnect\Services\RequestTokens;
+use Pinnacle\OpenIdConnect\Services\TokenRequestor;
 use Pinnacle\OpenIdConnect\Services\RequestUserInfo;
+use Pinnacle\OpenIdConnect\Services\StatePersisterWrapper;
 use Psr\Log\LoggerInterface;
 
 class Authenticator
 {
     public function __construct(
-        private ProviderInterface $provider,
-        private ?LoggerInterface  $logger = null
+        private StatePersisterInterface $statePersister,
+        private ?LoggerInterface        $logger = null
     ) {
     }
 
-    /**
-     * @param string[] $scopes
-     *
-     * @return AuthenticationRequest
-     */
-    public function buildAuthenticationRequest(Uri $redirectUri, array $scopes): AuthenticationRequest
+    public function beginAuthentication(Uri $redirectUri, ProviderInterface $provider,): AuthenticationUriBuilder
     {
         if ($redirectUri->getScheme() !== 'https') {
             throw new InsecureUriProtocolException('Redirect URI must use https');
         }
 
-        $authenticationRequest = new AuthenticationRequest($this->provider, $redirectUri);
+        $authenticationUriBuilder = new AuthenticationUriBuilder($provider, $redirectUri);
 
-        foreach ($scopes as $scope) {
-            $authenticationRequest->addScope($scope);
-        }
+        $state     = $authenticationUriBuilder->getState();
+        $challenge = $authenticationUriBuilder->getCodeChallenge();
 
-        return $authenticationRequest;
+        $statePersisterWrapper = new StatePersisterWrapper($this->statePersister, $state);
+
+        $statePersisterWrapper->storeChallenge($challenge);
+        $statePersisterWrapper->storeProvider($provider);
+        $statePersisterWrapper->storeRedirectUri($redirectUri);
+
+        return $authenticationUriBuilder;
     }
 
-    public function getUserInformationFromAuthenticationResponse(
-        AuthenticationResponseInterface $response,
-        AuthenticationRequest           $originalRequest
-    ): UserInfo {
-        if ($response->getState() !== $originalRequest->getState()) {
-            throw new MismatchStateException(
+    /**
+     * @throws MissingRequiredQueryParametersException
+     * @throws AuthenticationRequestException
+     * @throws MismatchChallengeException
+     * @throws StatePersisterMissingValueException
+     */
+    public function handleAuthorizationCodeCallback(Uri $callbackUri): AuthorizationCodeResponse
+    {
+        $authenticationRequest = new AuthenticationRequest($callbackUri);
+
+        $responseState = $authenticationRequest->getState();
+
+        $statePersisterWrapper = new StatePersisterWrapper($this->statePersister, $responseState);
+
+        $challenge   = $statePersisterWrapper->getChallenge();
+        $provider    = $statePersisterWrapper->getProvider();
+        $redirectUri = $statePersisterWrapper->getRedirectUri();
+
+        if ($authenticationRequest->getChallenge() !== $challenge) {
+            throw new MismatchChallengeException(
                 sprintf(
-                    'Response state %s does not match the request state %s',
-                    $response->getState(),
-                    $originalRequest->getState()
+                    'Response challenge %s does not match the original request %s.',
+                    $authenticationRequest->getChallenge(),
+                    $challenge
                 )
             );
         }
 
-        $requestTokens = new RequestTokens(
-            $this->provider,
-            $originalRequest->getRedirectUri(),
-            $originalRequest->getCodeChallenge(),
+        return new AuthorizationCodeResponse(
+            $authenticationRequest->getAuthorizationCode(),
+            $provider,
+            $redirectUri,
+            $challenge
+        );
+    }
+
+    /**
+     * @throws OpenIdRequestException
+     * @throws AccessTokenNotFoundException
+     */
+    public function fetchAccessTokenWithAuthorizationCode(
+        AuthorizationCodeResponse $authorizationCodeResponse
+    ): AccessTokenResponse {
+        $tokenRequestor = new TokenRequestor(
+            $authorizationCodeResponse->getProvider(),
+            $authorizationCodeResponse->getRedirectUri(),
+            $authorizationCodeResponse->getChallenge(),
             $this->logger
         );
 
-        $accessToken = $requestTokens->getAccessTokenForAuthorizationCode(
-            $response->getAuthorizationCode()
+        $accessToken = $tokenRequestor->getAccessTokenForAuthorizationCode(
+            $authorizationCodeResponse->getAuthorizationCode()
         );
 
+        return new AccessTokenResponse($accessToken, $authorizationCodeResponse->getProvider());
+    }
+
+    public function fetchUserInformationWithAccessToken(AccessTokenResponse $accessTokenResponse): UserInfo
+    {
         // TODO:: We will be replacing this call and instead be parsing the JWT.
-        return RequestUserInfo::execute($this->provider, $accessToken, $this->logger);
+        return RequestUserInfo::execute(
+            $accessTokenResponse->getProvider(),
+            $accessTokenResponse->getAccessToken(),
+            $this->logger
+        );
     }
 }

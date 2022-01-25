@@ -1,22 +1,29 @@
 <h1 align="center">Openid-Connect</h1>
 
 ## Installation
+
 In your composer.json add the following to your "repositories" field:
+
 ```json
 "openid-connect": {
-            "type": "vcs",
-            "url": "https://github.com/pinnacleqi/openid-connect"
-        }
+"type": "vcs",
+"url": "https://github.com/pinnacleqi/openid-connect"
+}
 ```
-Then run 
+
+Then run
+
 ```sh
 composer require pinnacle/openid-connect
 ```
 
 ## Basic Usage
+
 To obtain a redirect URL for an OAuth provider:
+
 ```php
-$providerDto = new ProviderDto(
+$provider = new Provider(
+        $identifier, // Optional parameter used to identify the provider within the application.
         $clientId,
         $clientSecret,
         $authorizationEndpoint,
@@ -24,35 +31,33 @@ $providerDto = new ProviderDto(
         $userInfoEndpoint
 );
 
-$authenticate =  new Authenticate(
-    $providerDto,
-    $responseType, // ResponseType::CODE || ResponseType::Token
-    $redirectUrl // Your callback URL
+$authenticator =  new Authenticator(
+    $statePersistor, // Class should implement StatePersisterInterface.
+    $logger // Class should implement the LoggerInterface.
 );
 
-// Additional options such as:
-// $authenticate->addScope();
-// $authenticate->withState();
-// $authenticate->withChallenge();
-// etc.
-
-return $authenticate->getAuthRedirectUrl();
+$authenticationRedirectUri = $authenticator
+    ->beginAuthentication($provider, $redirectUrl)
+    ->withScopes('profile', 'email', 'phone')
+    ->uri();
 ```
 
-To handle OAuth callbacks to get authorization tokens or user info:
+To handle OAuth callbacks to get user info:
+
 ```php
-$providerDto = new ProviderDto(/*...*/);
+$authenticator = new Authenticator($statePersistor, $logger)
 
-$authorize = new Authorize(
-    $providerDto,
-    $redirectUrl, // Your original callback URL
-    $authorizationCode, // Obtained from the callback query parameters
-    $codeResolver // Include if PKCE was used initially
-);
+$authorizationCodeResponse = $authenticator->handleAuthorizationCodeCallback($callbackUri);
 
-$authorize->getAccessToken(); // To get the access token
-$authorize->getUserInfo(); // To get the userInfoDto.
+// Get the provider id.
+$providerId = $authorizationCodeResponse->getProvider()->getIdentifier();
+
+// Fetch access token.
+$accessTokenResponse = $authenticator->fetchAccessTokenWithAuthorizationCode($authorizationCodeResponse);
+
+// Fetch user info.
+$userInfo = $authenticator->fetchUserInformationWithAccessToken($accessTokenResponse);
 
 // e.g. getting the user's subject identifier:
-return $authorize->getUserInfo()->getSubjectIdentifier();
+$subjectIdentifier = $userInfo->getSubjectIdentifier();
 ```
