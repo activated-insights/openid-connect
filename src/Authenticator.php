@@ -38,7 +38,7 @@ class Authenticator
         ProviderConfigurationInterface $provider,
     ): AuthenticationUriBuilder {
         if ($redirectUri->getScheme() !== 'https') {
-            throw new InsecureUriException('Redirect URI must use https');
+            throw new InsecureUriException('Redirect URI must use https.');
         }
 
         $authenticationUriBuilder = new AuthenticationUriBuilder($provider, $redirectUri);
