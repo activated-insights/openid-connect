@@ -28,6 +28,7 @@ class RequestTokens
 
     /**
      * @throws OpenIdRequestException
+     * @throws AccessTokenNotFoundException
      */
     public function getAccessTokenForAuthorizationCode(string $authorizationCode): string
     {
@@ -93,6 +94,9 @@ class RequestTokens
         }
     }
 
+    /**
+     * @throws AccessTokenNotFoundException
+     */
     private static function accessTokenFromJsonResponse(stdClass $jsonResponse): string
     {
         if (!isset($jsonResponse->access_token)) {
