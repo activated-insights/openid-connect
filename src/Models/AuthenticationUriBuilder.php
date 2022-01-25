@@ -8,7 +8,7 @@ use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 
 class AuthenticationUriBuilder
 {
-    private const                 DEFAULT_SCOPES        = ['openid', 'profile', 'email'];
+    private const                 DEFAULT_SCOPES        = ['openid'];
 
     private const                 CODE_CHALLENGE_METHOD = 'S256';
 
