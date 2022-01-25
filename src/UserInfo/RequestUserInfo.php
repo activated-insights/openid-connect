@@ -11,6 +11,7 @@ use GuzzleHttp\Utils;
 use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Provider\Models\ProviderConfiguration;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
+use Pinnacle\OpenIdConnect\Tokens\Models\AccessToken;
 use Pinnacle\OpenIdConnect\UserInfo\Models\UserInfo;
 use Psr\Log\LoggerInterface;
 use stdClass;
@@ -22,7 +23,7 @@ class RequestUserInfo
      */
     public static function execute(
         ProviderConfiguration $provider,
-        string                $accessToken,
+        AccessToken           $accessToken,
         ?LoggerInterface      $logger = null
     ): UserInfo {
         $jsonResponse = self::requestUserInfo($provider, $accessToken, $logger);
@@ -35,7 +36,7 @@ class RequestUserInfo
      */
     private static function requestUserInfo(
         ProviderConfiguration $provider,
-        string                $accessToken,
+        AccessToken           $accessToken,
         ?LoggerInterface      $logger = null
     ): stdClass {
         try {
@@ -49,7 +50,7 @@ class RequestUserInfo
                     $provider->getUserInfoEndpoint(),
                     [
                         RequestOptions::HEADERS => [
-                            'Authorization' => 'Bearer ' . $accessToken,
+                            'Authorization' => 'Bearer ' . $accessToken->getValue(),
                         ],
                         RequestOptions::TIMEOUT => 15, // in seconds
                     ]

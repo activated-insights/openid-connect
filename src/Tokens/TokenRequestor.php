@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenIdConnect\Requestors;
+namespace Pinnacle\OpenIdConnect\Tokens;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -13,8 +13,9 @@ use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Authentication\Models\Challenge;
 use Pinnacle\OpenIdConnect\Authorization\Models\AuthorizationCode;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
-use Pinnacle\OpenIdConnect\Requestors\Exceptions\AccessTokenNotFoundException;
+use Pinnacle\OpenIdConnect\Tokens\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
+use Pinnacle\OpenIdConnect\Tokens\Models\AccessToken;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
@@ -32,7 +33,7 @@ class TokenRequestor
      * @throws OpenIdConnectException
      * @throws AccessTokenNotFoundException
      */
-    public function fetchTokensForAuthorizationCode(AuthorizationCode $authorizationCode): string
+    public function fetchTokensForAuthorizationCode(AuthorizationCode $authorizationCode): AccessToken
     {
         $response = $this->requestTokens($authorizationCode);
 
@@ -99,7 +100,7 @@ class TokenRequestor
     /**
      * @throws AccessTokenNotFoundException
      */
-    private static function accessTokenFromJsonResponse(stdClass $jsonResponse): string
+    private static function accessTokenFromJsonResponse(stdClass $jsonResponse): AccessToken
     {
         if (!isset($jsonResponse->access_token)) {
             throw new AccessTokenNotFoundException(
@@ -107,6 +108,6 @@ class TokenRequestor
             );
         }
 
-        return (string)$jsonResponse->access_token;
+        return new AccessToken($jsonResponse->access_token);
     }
 }

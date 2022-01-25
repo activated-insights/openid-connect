@@ -1,6 +1,6 @@
 <?php
 
-namespace Pinnacle\OpenIdConnect\Requestors\Exceptions;
+namespace Pinnacle\OpenIdConnect\Tokens\Exceptions;
 
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
 

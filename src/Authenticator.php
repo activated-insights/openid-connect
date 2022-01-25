@@ -14,8 +14,8 @@ use Pinnacle\OpenIdConnect\Authorization\Exceptions\AuthorizationCodeCallbackExc
 use Pinnacle\OpenIdConnect\Authorization\Exceptions\MissingRequiredQueryParametersException;
 use Pinnacle\OpenIdConnect\Authorization\TokensResponse;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
-use Pinnacle\OpenIdConnect\Requestors\Exceptions\AccessTokenNotFoundException;
-use Pinnacle\OpenIdConnect\Requestors\TokenRequestor;
+use Pinnacle\OpenIdConnect\Tokens\Exceptions\AccessTokenNotFoundException;
+use Pinnacle\OpenIdConnect\Tokens\TokenRequestor;
 use Pinnacle\OpenIdConnect\Support\Exceptions\InsecureUriException;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
 use Pinnacle\OpenIdConnect\UserInfo\Models\UserInfo;
