@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenIdConnect\UserInfo;
+namespace Pinnacle\OpenIdConnect\UserInfo\Models;
 
 use Pinnacle\CommonValueObjects\EmailAddress;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
@@ -10,19 +10,19 @@ use stdClass;
 
 class UserInfo
 {
-    private string       $subjectIdentifier;
+    private SubjectIdentifier $subjectIdentifier;
 
-    private string       $fullName;
+    private FullName          $fullName;
 
-    private EmailAddress $emailAddress;
+    private EmailAddress      $emailAddress;
 
-    private bool         $emailAddressVerified;
+    private bool              $emailAddressVerified;
 
     public function __construct(
-        string $subjectIdentifier,
-        string $fullName,
-        EmailAddress $emailAddress,
-        bool $emailAddressVerified
+        SubjectIdentifier $subjectIdentifier,
+        FullName          $fullName,
+        EmailAddress      $emailAddress,
+        bool              $emailAddressVerified
     ) {
         $this->subjectIdentifier    = $subjectIdentifier;
         $this->fullName             = $fullName;
@@ -62,19 +62,19 @@ class UserInfo
         }
 
         return new self(
-            $json->sub,
-            $json->name,
+            new SubjectIdentifier($json->sub),
+            new FullName($json->name),
             new EmailAddress($json->email),
             $emailVerified
         );
     }
 
-    public function getSubjectIdentifier(): string
+    public function getSubjectIdentifier(): SubjectIdentifier
     {
         return $this->subjectIdentifier;
     }
 
-    public function getFullName(): string
+    public function getFullName(): FullName
     {
         return $this->fullName;
     }

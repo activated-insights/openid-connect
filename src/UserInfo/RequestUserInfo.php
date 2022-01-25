@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenIdConnect\Requestors;
+namespace Pinnacle\OpenIdConnect\UserInfo;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Utils;
 use InvalidArgumentException;
-use Pinnacle\OpenIdConnect\UserInfo\UserInfo;
 use Pinnacle\OpenIdConnect\Provider\Models\ProviderConfiguration;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
+use Pinnacle\OpenIdConnect\UserInfo\Models\UserInfo;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
