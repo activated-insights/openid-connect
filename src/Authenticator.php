@@ -32,6 +32,7 @@ class Authenticator
 
     /**
      * @throws InsecureUriException
+     * @throws OpenIdConnectException
      */
     public function beginAuthentication(
         Uri                            $redirectUri,

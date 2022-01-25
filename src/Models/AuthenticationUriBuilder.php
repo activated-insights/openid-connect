@@ -2,8 +2,10 @@
 
 namespace Pinnacle\OpenIdConnect\Models;
 
+use Exception;
 use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Uri;
+use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
 use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 
 class AuthenticationUriBuilder
@@ -23,6 +25,9 @@ class AuthenticationUriBuilder
 
     private string $codeChallenge;
 
+    /**
+     * @throws OpenIdConnectException
+     */
     public function __construct(private ProviderConfigurationInterface $provider, private Uri $redirectUri)
     {
         $this->scopes        = self::DEFAULT_SCOPES;
@@ -79,6 +84,9 @@ class AuthenticationUriBuilder
         return rtrim(strtr($base64Encoded, '+/', '-_'), '=');
     }
 
+    /**
+     * @throws OpenIdConnectException
+     */
     private function generateRandomString($length = 16): string
     {
         $string = '';
@@ -86,7 +94,11 @@ class AuthenticationUriBuilder
         while (($len = strlen($string)) < $length) {
             $size = $length - $len;
 
-            $bytes = random_bytes($size);
+            try {
+                $bytes = random_bytes($size);
+            } catch (Exception $e) {
+                throw new OpenIdConnectException('Error occurred while generating random string', 0, $e);
+            }
 
             $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
         }
