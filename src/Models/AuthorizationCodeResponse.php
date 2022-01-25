@@ -3,6 +3,7 @@
 namespace Pinnacle\OpenIdConnect\Models;
 
 use GuzzleHttp\Psr7\Uri;
+use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 
 class AuthorizationCodeResponse
 {
@@ -14,7 +15,7 @@ class AuthorizationCodeResponse
     ) {
     }
 
-    public function getProvider(): ProviderConfiguration
+    public function getProvider(): ProviderConfigurationInterface
     {
         return $this->provider;
     }
