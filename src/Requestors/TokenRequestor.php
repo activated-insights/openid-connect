@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenIdConnect\Services;
+namespace Pinnacle\OpenIdConnect\Requestors;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
