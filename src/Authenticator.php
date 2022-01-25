@@ -6,7 +6,7 @@ use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Exceptions\AuthenticationConnectException;
 use Pinnacle\OpenIdConnect\Exceptions\InsecureUriException;
-use Pinnacle\OpenIdConnect\Exceptions\MismatchChallengeException;
+use Pinnacle\OpenIdConnect\Exceptions\ChallengeMismatchException;
 use Pinnacle\OpenIdConnect\Exceptions\MissingRequiredQueryParametersException;
 use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
 use Pinnacle\OpenIdConnect\Exceptions\StatePersisterMissingValueException;
@@ -58,7 +58,7 @@ class Authenticator
     /**
      * @throws MissingRequiredQueryParametersException
      * @throws AuthenticationConnectException
-     * @throws MismatchChallengeException
+     * @throws ChallengeMismatchException
      * @throws StatePersisterMissingValueException
      */
     public function handleAuthorizationCodeCallback(Uri $callbackUri): AuthorizationCodeResponse
@@ -74,7 +74,7 @@ class Authenticator
         $redirectUri = $statePersisterWrapper->getRedirectUri();
 
         if ($authenticationRequest->getChallenge() !== $challenge) {
-            throw new MismatchChallengeException(
+            throw new ChallengeMismatchException(
                 sprintf(
                     'Response challenge %s does not match the original request %s.',
                     $authenticationRequest->getChallenge(),
