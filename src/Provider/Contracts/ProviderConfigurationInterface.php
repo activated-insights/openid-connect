@@ -3,9 +3,9 @@
 namespace Pinnacle\OpenIdConnect\Provider\Contracts;
 
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenIdConnect\Provider\ClientId;
-use Pinnacle\OpenIdConnect\Provider\ClientSecret;
-use Pinnacle\OpenIdConnect\Provider\Identifier;
+use Pinnacle\OpenIdConnect\Provider\Models\ClientId;
+use Pinnacle\OpenIdConnect\Provider\Models\ClientSecret;
+use Pinnacle\OpenIdConnect\Provider\Models\Identifier;
 
 interface ProviderConfigurationInterface
 {

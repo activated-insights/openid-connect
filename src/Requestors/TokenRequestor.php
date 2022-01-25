@@ -10,9 +10,10 @@ use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Utils;
 use InvalidArgumentException;
-use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
-use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
+use Pinnacle\OpenIdConnect\Authentication\Models\Challenge;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
+use Pinnacle\OpenIdConnect\Requestors\Exceptions\AccessTokenNotFoundException;
+use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
@@ -21,7 +22,7 @@ class TokenRequestor
     public function __construct(
         private ProviderConfigurationInterface $provider,
         private Uri                            $redirectUri,
-        private string                         $codeVerifier,
+        private Challenge                      $challenge,
         private ?LoggerInterface               $logger = null
     ) {
     }
@@ -50,7 +51,7 @@ class TokenRequestor
                 'client_id'     => $this->provider->getClientId()->getValue(),
                 'redirect_uri'  => (string)$this->redirectUri,
                 'code'          => $authorizationCode,
-                'code_verifier' => $this->codeVerifier,
+                'code_verifier' => $this->challenge->getValue(),
             ];
 
             $this->logger?->debug(

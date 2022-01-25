@@ -9,9 +9,9 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Utils;
 use InvalidArgumentException;
-use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
-use Pinnacle\OpenIdConnect\Models\UserInfo;
-use Pinnacle\OpenIdConnect\Provider\ProviderConfiguration;
+use Pinnacle\OpenIdConnect\UserInfo\UserInfo;
+use Pinnacle\OpenIdConnect\Provider\Models\ProviderConfiguration;
+use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
 use Psr\Log\LoggerInterface;
 use stdClass;
 

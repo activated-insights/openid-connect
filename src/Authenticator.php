@@ -3,23 +3,23 @@
 namespace Pinnacle\OpenIdConnect;
 
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
-use Pinnacle\OpenIdConnect\Exceptions\AuthorizationCodeCallbackException;
-use Pinnacle\OpenIdConnect\Exceptions\ChallengeMismatchException;
-use Pinnacle\OpenIdConnect\Exceptions\InsecureUriException;
-use Pinnacle\OpenIdConnect\Exceptions\MissingRequiredQueryParametersException;
-use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
-use Pinnacle\OpenIdConnect\Models\AuthenticationTokensResponse;
-use Pinnacle\OpenIdConnect\Models\AuthenticationUriBuilder;
-use Pinnacle\OpenIdConnect\Models\AuthorizationCodeCallbackData;
-use Pinnacle\OpenIdConnect\Models\AuthorizationCodeResponse;
-use Pinnacle\OpenIdConnect\Models\UserInfo;
+use Pinnacle\OpenIdConnect\Authentication\AuthenticationUriBuilder;
+use Pinnacle\OpenIdConnect\Authentication\Constants\ChallengeMismatchException;
+use Pinnacle\OpenIdConnect\Authentication\StatePersister\Contracts\StatePersisterInterface;
+use Pinnacle\OpenIdConnect\Authentication\StatePersister\Exceptions\StatePersisterMissingValueException;
+use Pinnacle\OpenIdConnect\Authentication\StatePersister\StatePersisterWrapper;
+use Pinnacle\OpenIdConnect\Authorization\AuthorizationCodeCallbackData;
+use Pinnacle\OpenIdConnect\Authorization\AuthorizationCodeResponse;
+use Pinnacle\OpenIdConnect\Authorization\Exceptions\AuthorizationCodeCallbackException;
+use Pinnacle\OpenIdConnect\Authorization\Exceptions\MissingRequiredQueryParametersException;
+use Pinnacle\OpenIdConnect\Authorization\TokensResponse;
+use Pinnacle\OpenIdConnect\UserInfo\UserInfo;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
+use Pinnacle\OpenIdConnect\Requestors\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Requestors\RequestUserInfo;
 use Pinnacle\OpenIdConnect\Requestors\TokenRequestor;
-use Pinnacle\OpenIdConnect\State\Contracts\StatePersisterInterface;
-use Pinnacle\OpenIdConnect\State\Exceptions\StatePersisterMissingValueException;
-use Pinnacle\OpenIdConnect\State\StatePersisterWrapper;
+use Pinnacle\OpenIdConnect\Support\Exceptions\InsecureUriException;
+use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
 use Psr\Log\LoggerInterface;
 
 class Authenticator
@@ -74,12 +74,12 @@ class Authenticator
         $provider    = $statePersisterWrapper->getProvider();
         $redirectUri = $statePersisterWrapper->getRedirectUri();
 
-        if ($callbackData->getChallenge() !== $challenge) {
+        if (!$callbackData->getChallenge()->equals($challenge)) {
             throw new ChallengeMismatchException(
                 sprintf(
                     'Response challenge %s does not match the original request %s.',
-                    $callbackData->getChallenge(),
-                    $challenge
+                    $callbackData->getChallenge()->getValue(),
+                    $challenge->getValue()
                 )
             );
         }
@@ -98,7 +98,7 @@ class Authenticator
      */
     public function fetchTokensWithAuthorizationCode(
         AuthorizationCodeResponse $authorizationCodeResponse
-    ): AuthenticationTokensResponse {
+    ): TokensResponse {
         $tokenRequestor = new TokenRequestor(
             $authorizationCodeResponse->getProvider(),
             $authorizationCodeResponse->getRedirectUri(),
@@ -111,10 +111,10 @@ class Authenticator
             $authorizationCodeResponse->getAuthorizationCode()
         );
 
-        return new AuthenticationTokensResponse($accessToken, $authorizationCodeResponse->getProvider());
+        return new TokensResponse($accessToken, $authorizationCodeResponse->getProvider());
     }
 
-    public function fetchUserInformationWithAccessToken(AuthenticationTokensResponse $authenticationTokensResponse
+    public function fetchUserInformationWithAccessToken(TokensResponse $authenticationTokensResponse
     ): UserInfo {
         // TODO:: We will be replacing this call and instead be parsing the JWT.
         return RequestUserInfo::execute(
