@@ -2,8 +2,6 @@
 
 namespace Pinnacle\OpenIdConnect\Exceptions;
 
-use DomainException;
-
-class InsecureUriProtocolException extends DomainException
+class InsecureUriProtocolException extends OpenIdRequestException
 {
 }

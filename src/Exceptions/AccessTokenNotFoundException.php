@@ -2,8 +2,6 @@
 
 namespace Pinnacle\OpenIdConnect\Exceptions;
 
-use DomainException;
-
-class AccessTokenNotFoundException extends DomainException
+class AccessTokenNotFoundException extends OpenIdRequestException
 {
 }
