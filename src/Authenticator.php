@@ -4,14 +4,14 @@ namespace Pinnacle\OpenIdConnect;
 
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
-use Pinnacle\OpenIdConnect\Exceptions\AuthenticationConnectException;
+use Pinnacle\OpenIdConnect\Exceptions\AuthorizationCodeCallbackException;
 use Pinnacle\OpenIdConnect\Exceptions\InsecureUriException;
 use Pinnacle\OpenIdConnect\Exceptions\ChallengeMismatchException;
 use Pinnacle\OpenIdConnect\Exceptions\MissingRequiredQueryParametersException;
 use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
 use Pinnacle\OpenIdConnect\Exceptions\StatePersisterMissingValueException;
 use Pinnacle\OpenIdConnect\Models\AccessTokenResponse;
-use Pinnacle\OpenIdConnect\Models\AuthenticationRequest;
+use Pinnacle\OpenIdConnect\Models\AuthorizationCodeCallbackData;
 use Pinnacle\OpenIdConnect\Models\AuthenticationUriBuilder;
 use Pinnacle\OpenIdConnect\Models\AuthorizationCodeResponse;
 use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
@@ -58,15 +58,15 @@ class Authenticator
 
     /**
      * @throws MissingRequiredQueryParametersException
-     * @throws AuthenticationConnectException
+     * @throws AuthorizationCodeCallbackException
      * @throws ChallengeMismatchException
      * @throws StatePersisterMissingValueException
      */
     public function handleAuthorizationCodeCallback(Uri $callbackUri): AuthorizationCodeResponse
     {
-        $authenticationRequest = new AuthenticationRequest($callbackUri);
+        $callbackData = new AuthorizationCodeCallbackData($callbackUri);
 
-        $responseState = $authenticationRequest->getState();
+        $responseState = $callbackData->getState();
 
         $statePersisterWrapper = new StatePersisterWrapper($this->statePersister, $responseState);
 
@@ -74,18 +74,18 @@ class Authenticator
         $provider    = $statePersisterWrapper->getProvider();
         $redirectUri = $statePersisterWrapper->getRedirectUri();
 
-        if ($authenticationRequest->getChallenge() !== $challenge) {
+        if ($callbackData->getChallenge() !== $challenge) {
             throw new ChallengeMismatchException(
                 sprintf(
                     'Response challenge %s does not match the original request %s.',
-                    $authenticationRequest->getChallenge(),
+                    $callbackData->getChallenge(),
                     $challenge
                 )
             );
         }
 
         return new AuthorizationCodeResponse(
-            $authenticationRequest->getAuthorizationCode(),
+            $callbackData->getAuthorizationCode(),
             $provider,
             $redirectUri,
             $challenge

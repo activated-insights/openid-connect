@@ -4,7 +4,7 @@ namespace Pinnacle\OpenIdConnect\Exceptions;
 
 use Pinnacle\OpenIdConnect\Exceptions\Constants\AuthenticationRequestErrorCode;
 
-class AuthenticationConnectException extends OpenIdConnectException
+class AuthorizationCodeCallbackException extends OpenIdConnectException
 {
     public function __construct(string $errorCode, ?string $errorDescription)
     {
