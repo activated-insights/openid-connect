@@ -5,7 +5,7 @@ namespace Pinnacle\OpenIdConnect;
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Exceptions\AuthenticationConnectException;
-use Pinnacle\OpenIdConnect\Exceptions\InsecureUriProtocolException;
+use Pinnacle\OpenIdConnect\Exceptions\InsecureUriException;
 use Pinnacle\OpenIdConnect\Exceptions\MismatchChallengeException;
 use Pinnacle\OpenIdConnect\Exceptions\MissingRequiredQueryParametersException;
 use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
@@ -30,10 +30,15 @@ class Authenticator
     ) {
     }
 
-    public function beginAuthentication(Uri $redirectUri, ProviderConfigurationInterface $provider,): AuthenticationUriBuilder
-    {
+    /**
+     * @throws InsecureUriException
+     */
+    public function beginAuthentication(
+        Uri                            $redirectUri,
+        ProviderConfigurationInterface $provider,
+    ): AuthenticationUriBuilder {
         if ($redirectUri->getScheme() !== 'https') {
-            throw new InsecureUriProtocolException('Redirect URI must use https');
+            throw new InsecureUriException('Redirect URI must use https');
         }
 
         $authenticationUriBuilder = new AuthenticationUriBuilder($provider, $redirectUri);
