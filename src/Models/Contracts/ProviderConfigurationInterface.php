@@ -4,7 +4,7 @@ namespace Pinnacle\OpenIdConnect\Models\Contracts;
 
 use GuzzleHttp\Psr7\Uri;
 
-interface ProviderInterface
+interface ProviderConfigurationInterface
 {
     public function getIdentifier(): mixed;
 

@@ -2,11 +2,11 @@
 
 namespace Pinnacle\OpenIdConnect\Models;
 
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
+use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 
 class AccessTokenResponse
 {
-    public function __construct(private string $accessToken, private ProviderInterface $provider)
+    public function __construct(private string $accessToken, private ProviderConfigurationInterface $provider)
     {
     }
 
@@ -14,8 +14,8 @@ class AccessTokenResponse
     {
         return $this->accessToken;
     }
-    
-    public function getProvider(): ProviderInterface
+
+    public function getProvider(): ProviderConfigurationInterface
     {
         return $this->provider;
     }

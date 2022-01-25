@@ -11,7 +11,7 @@ use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Utils;
 use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
+use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
 use Psr\Log\LoggerInterface;
 use stdClass;
@@ -19,10 +19,10 @@ use stdClass;
 class TokenRequestor
 {
     public function __construct(
-        private ProviderInterface $provider,
-        private Uri               $redirectUri,
-        private string            $codeVerifier,
-        private ?LoggerInterface  $logger = null
+        private ProviderConfigurationInterface $provider,
+        private Uri                            $redirectUri,
+        private string                         $codeVerifier,
+        private ?LoggerInterface               $logger = null
     ) {
     }
 

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Pinnacle\OpenIdConnect\Models;
 
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
+use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 
-class Provider implements ProviderInterface
+class ProviderConfiguration implements ProviderConfigurationInterface
 {
     public function __construct(
         private mixed  $identifier,

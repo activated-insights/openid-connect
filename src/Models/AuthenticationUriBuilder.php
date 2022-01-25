@@ -4,7 +4,7 @@ namespace Pinnacle\OpenIdConnect\Models;
 
 use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
+use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 
 class AuthenticationUriBuilder
 {
@@ -23,7 +23,7 @@ class AuthenticationUriBuilder
 
     private string $codeChallenge;
 
-    public function __construct(private ProviderInterface $provider, private Uri $redirectUri)
+    public function __construct(private ProviderConfigurationInterface $provider, private Uri $redirectUri)
     {
         $this->scopes        = self::DEFAULT_SCOPES;
         $this->state         = $this->generateRandomString();

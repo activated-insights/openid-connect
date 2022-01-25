@@ -14,7 +14,7 @@ use Pinnacle\OpenIdConnect\Models\AccessTokenResponse;
 use Pinnacle\OpenIdConnect\Models\AuthenticationRequest;
 use Pinnacle\OpenIdConnect\Models\AuthenticationUriBuilder;
 use Pinnacle\OpenIdConnect\Models\AuthorizationCodeResponse;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
+use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Models\Contracts\StatePersisterInterface;
 use Pinnacle\OpenIdConnect\Models\UserInfo;
 use Pinnacle\OpenIdConnect\Services\TokenRequestor;
@@ -30,7 +30,7 @@ class Authenticator
     ) {
     }
 
-    public function beginAuthentication(Uri $redirectUri, ProviderInterface $provider,): AuthenticationUriBuilder
+    public function beginAuthentication(Uri $redirectUri, ProviderConfigurationInterface $provider,): AuthenticationUriBuilder
     {
         if ($redirectUri->getScheme() !== 'https') {
             throw new InsecureUriProtocolException('Redirect URI must use https');

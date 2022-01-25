@@ -9,7 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Utils;
 use InvalidArgumentException;
-use Pinnacle\OpenIdConnect\Models\Provider;
+use Pinnacle\OpenIdConnect\Models\ProviderConfiguration;
 use Pinnacle\OpenIdConnect\Models\UserInfo;
 use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
 use Psr\Log\LoggerInterface;
@@ -21,9 +21,9 @@ class RequestUserInfo
      * @throws OpenIdConnectException
      */
     public static function execute(
-        Provider         $provider,
-        string           $accessToken,
-        ?LoggerInterface $logger = null
+        ProviderConfiguration $provider,
+        string                $accessToken,
+        ?LoggerInterface      $logger = null
     ): UserInfo {
         $jsonResponse = self::requestUserInfo($provider, $accessToken, $logger);
 
@@ -34,9 +34,9 @@ class RequestUserInfo
      * @throws OpenIdConnectException
      */
     private static function requestUserInfo(
-        Provider         $provider,
-        string           $accessToken,
-        ?LoggerInterface $logger = null
+        ProviderConfiguration $provider,
+        string                $accessToken,
+        ?LoggerInterface      $logger = null
     ): stdClass {
         try {
             $client = new Client();

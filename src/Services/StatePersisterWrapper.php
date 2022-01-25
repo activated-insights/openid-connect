@@ -5,9 +5,9 @@ namespace Pinnacle\OpenIdConnect\Services;
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Exceptions\StatePersisterMissingValueException;
 use Pinnacle\OpenIdConnect\Models\Constants\StateKey;
-use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
+use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Models\Contracts\StatePersisterInterface;
-use Pinnacle\OpenIdConnect\Models\Provider;
+use Pinnacle\OpenIdConnect\Models\ProviderConfiguration;
 
 class StatePersisterWrapper
 {
@@ -34,7 +34,7 @@ class StatePersisterWrapper
         return $challenge;
     }
 
-    public function storeProvider(ProviderInterface $provider): void
+    public function storeProvider(ProviderConfigurationInterface $provider): void
     {
         $this->storeValueWithKey(StateKey::PROVIDER_IDENTIFIER(), $provider->getIdentifier());
         $this->storeValueWithKey(StateKey::PROVIDER_CLIENT_ID(), $provider->getClientId());
@@ -47,7 +47,7 @@ class StatePersisterWrapper
     /**
      * @throws StatePersisterMissingValueException
      */
-    public function getProvider(): Provider
+    public function getProvider(): ProviderConfiguration
     {
         $identifier            = $this->getValueWithStateKey(StateKey::PROVIDER_IDENTIFIER());
         $clientId              = $this->getValueWithStateKey(StateKey::PROVIDER_CLIENT_ID());
@@ -65,7 +65,7 @@ class StatePersisterWrapper
             throw new StatePersisterMissingValueException('Unable to retrieve the provider from state store.');
         }
 
-        return new Provider(
+        return new ProviderConfiguration(
             $identifier,
             $clientId,
             $clientSecret,

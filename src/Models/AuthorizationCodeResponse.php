@@ -7,14 +7,14 @@ use GuzzleHttp\Psr7\Uri;
 class AuthorizationCodeResponse
 {
     public function __construct(
-        private string   $authorizationCode,
-        private Provider $provider,
-        private Uri      $redirectUri,
-        private string   $challenge
+        private string                $authorizationCode,
+        private ProviderConfiguration $provider,
+        private Uri                   $redirectUri,
+        private string                $challenge
     ) {
     }
 
-    public function getProvider(): Provider
+    public function getProvider(): ProviderConfiguration
     {
         return $this->provider;
     }
