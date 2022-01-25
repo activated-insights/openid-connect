@@ -4,7 +4,7 @@ namespace Pinnacle\OpenIdConnect\Models;
 
 use Pinnacle\OpenIdConnect\Models\Contracts\ProviderConfigurationInterface;
 
-class AccessTokenResponse
+class AuthenticationTokensResponse
 {
     public function __construct(private string $accessToken, private ProviderConfigurationInterface $provider)
     {

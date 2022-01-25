@@ -10,7 +10,7 @@ use Pinnacle\OpenIdConnect\Exceptions\ChallengeMismatchException;
 use Pinnacle\OpenIdConnect\Exceptions\MissingRequiredQueryParametersException;
 use Pinnacle\OpenIdConnect\Exceptions\OpenIdConnectException;
 use Pinnacle\OpenIdConnect\Exceptions\StatePersisterMissingValueException;
-use Pinnacle\OpenIdConnect\Models\AccessTokenResponse;
+use Pinnacle\OpenIdConnect\Models\AuthenticationTokensResponse;
 use Pinnacle\OpenIdConnect\Models\AuthorizationCodeCallbackData;
 use Pinnacle\OpenIdConnect\Models\AuthenticationUriBuilder;
 use Pinnacle\OpenIdConnect\Models\AuthorizationCodeResponse;
@@ -98,7 +98,7 @@ class Authenticator
      */
     public function fetchTokensWithAuthorizationCode(
         AuthorizationCodeResponse $authorizationCodeResponse
-    ): AccessTokenResponse {
+    ): AuthenticationTokensResponse {
         $tokenRequestor = new TokenRequestor(
             $authorizationCodeResponse->getProvider(),
             $authorizationCodeResponse->getRedirectUri(),
@@ -110,15 +110,15 @@ class Authenticator
             $authorizationCodeResponse->getAuthorizationCode()
         );
 
-        return new AccessTokenResponse($accessToken, $authorizationCodeResponse->getProvider());
+        return new AuthenticationTokensResponse($accessToken, $authorizationCodeResponse->getProvider());
     }
 
-    public function fetchUserInformationWithAccessToken(AccessTokenResponse $accessTokenResponse): UserInfo
+    public function fetchUserInformationWithAccessToken(AuthenticationTokensResponse $authenticationTokensResponse): UserInfo
     {
         // TODO:: We will be replacing this call and instead be parsing the JWT.
         return RequestUserInfo::execute(
-            $accessTokenResponse->getProvider(),
-            $accessTokenResponse->getAccessToken(),
+            $authenticationTokensResponse->getProvider(),
+            $authenticationTokensResponse->getAccessToken(),
             $this->logger
         );
     }
