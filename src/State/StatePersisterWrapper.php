@@ -1,16 +1,16 @@
 <?php
 
-namespace Pinnacle\OpenIdConnect\Services;
+namespace Pinnacle\OpenIdConnect\State;
 
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenIdConnect\Exceptions\StatePersisterMissingValueException;
-use Pinnacle\OpenIdConnect\Models\Constants\StateKey;
-use Pinnacle\OpenIdConnect\Models\Contracts\StatePersisterInterface;
 use Pinnacle\OpenIdConnect\Provider\ClientId;
 use Pinnacle\OpenIdConnect\Provider\ClientSecret;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Provider\Identifier;
 use Pinnacle\OpenIdConnect\Provider\ProviderConfiguration;
+use Pinnacle\OpenIdConnect\State\Constants\StateKey;
+use Pinnacle\OpenIdConnect\State\Contracts\StatePersisterInterface;
+use Pinnacle\OpenIdConnect\State\Exceptions\StatePersisterMissingValueException;
 
 class StatePersisterWrapper
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pinnacle\OpenIdConnect\Models\Contracts;
+namespace Pinnacle\OpenIdConnect\State\Contracts;
 
 /**
  * Interface used to define how state values should be stored and retrieved within an application.

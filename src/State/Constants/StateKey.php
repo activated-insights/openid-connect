@@ -1,6 +1,6 @@
 <?php
 
-namespace Pinnacle\OpenIdConnect\Models\Constants;
+namespace Pinnacle\OpenIdConnect\State\Constants;
 
 use MyCLabs\Enum\Enum;
 
