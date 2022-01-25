@@ -11,6 +11,7 @@ use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Utils;
 use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Authentication\Models\Challenge;
+use Pinnacle\OpenIdConnect\Authorization\Models\AuthorizationCode;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Requestors\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
@@ -31,7 +32,7 @@ class TokenRequestor
      * @throws OpenIdConnectException
      * @throws AccessTokenNotFoundException
      */
-    public function fetchTokensForAuthorizationCode(string $authorizationCode): string
+    public function fetchTokensForAuthorizationCode(AuthorizationCode $authorizationCode): string
     {
         $response = $this->requestTokens($authorizationCode);
 
@@ -41,7 +42,7 @@ class TokenRequestor
     /**
      * @throws OpenIdConnectException
      */
-    private function requestTokens(string $authorizationCode): stdClass
+    private function requestTokens(AuthorizationCode $authorizationCode): stdClass
     {
         try {
             $client = new Client();
@@ -50,7 +51,7 @@ class TokenRequestor
                 'grant_type'    => 'authorization_code',
                 'client_id'     => $this->provider->getClientId()->getValue(),
                 'redirect_uri'  => (string)$this->redirectUri,
-                'code'          => $authorizationCode,
+                'code'          => $authorizationCode->getValue(),
                 'code_verifier' => $this->challenge->getValue(),
             ];
 

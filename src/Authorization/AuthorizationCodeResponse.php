@@ -4,13 +4,14 @@ namespace Pinnacle\OpenIdConnect\Authorization;
 
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Authentication\Models\Challenge;
+use Pinnacle\OpenIdConnect\Authorization\Models\AuthorizationCode;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Provider\Models\ProviderConfiguration;
 
 class AuthorizationCodeResponse
 {
     public function __construct(
-        private string                $authorizationCode,
+        private AuthorizationCode     $authorizationCode,
         private ProviderConfiguration $provider,
         private Uri                   $redirectUri,
         private Challenge             $challenge
@@ -22,7 +23,7 @@ class AuthorizationCodeResponse
         return $this->provider;
     }
 
-    public function getAuthorizationCode(): string
+    public function getAuthorizationCode(): AuthorizationCode
     {
         return $this->authorizationCode;
     }

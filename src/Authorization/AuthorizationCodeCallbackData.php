@@ -8,23 +8,24 @@ use Pinnacle\OpenIdConnect\Authentication\Models\State;
 use Pinnacle\OpenIdConnect\Authorization\Constants\AuthorizationCodeCallbackKey;
 use Pinnacle\OpenIdConnect\Authorization\Exceptions\AuthorizationCodeCallbackException;
 use Pinnacle\OpenIdConnect\Authorization\Exceptions\MissingRequiredQueryParametersException;
+use Pinnacle\OpenIdConnect\Authorization\Models\AuthorizationCode;
 
 class AuthorizationCodeCallbackData
 {
     /**
      * @var string[]
      */
-    private array   $rawQueryParams;
+    private array              $rawQueryParams;
 
-    private ?string $authorizationCode = null;
+    private ?AuthorizationCode $authorizationCode = null;
 
-    private ?string $stateValue        = null;
+    private ?State             $state             = null;
 
-    private ?string $challengeValue    = null;
+    private ?Challenge         $challenge         = null;
 
-    private ?string $errorCode         = null;
+    private ?string            $errorCodeValue    = null;
 
-    private ?string $errorDescription  = null;
+    private ?string            $errorDescription  = null;
 
     /**
      * @throws MissingRequiredQueryParametersException
@@ -39,7 +40,7 @@ class AuthorizationCodeCallbackData
         $this->assertHasRequiredParameters();
     }
 
-    public function getAuthorizationCode(): string
+    public function getAuthorizationCode(): AuthorizationCode
     {
         if ($this->authorizationCode === null) {
             throw new MissingRequiredQueryParametersException(AuthorizationCodeCallbackKey::CODE());
@@ -50,20 +51,20 @@ class AuthorizationCodeCallbackData
 
     public function getState(): State
     {
-        if ($this->stateValue === null) {
+        if ($this->state === null) {
             throw new MissingRequiredQueryParametersException(AuthorizationCodeCallbackKey::STATE());
         }
 
-        return new State($this->stateValue);
+        return $this->state;
     }
 
     public function getChallenge(): Challenge
     {
-        if ($this->challengeValue === null) {
+        if ($this->challenge === null) {
             throw new MissingRequiredQueryParametersException(AuthorizationCodeCallbackKey::CHALLENGE());
         }
 
-        return new Challenge($this->challengeValue);
+        return $this->challenge;
     }
 
     /**
@@ -76,11 +77,17 @@ class AuthorizationCodeCallbackData
         $this->rawQueryParams = [];
         parse_str($callbackUri->getQuery(), $this->rawQueryParams);
 
-        $this->authorizationCode = $this->findQueryParameter(AuthorizationCodeCallbackKey::CODE());
-        $this->stateValue        = $this->findQueryParameter(AuthorizationCodeCallbackKey::STATE());
-        $this->challengeValue    = $this->findQueryParameter(AuthorizationCodeCallbackKey::CHALLENGE());
-        $this->errorCode         = $this->findQueryParameter(AuthorizationCodeCallbackKey::ERROR());
-        $this->errorDescription  = $this->findQueryParameter(AuthorizationCodeCallbackKey::ERROR_DESCRIPTION());
+        $codeValue               = $this->findQueryParameter(AuthorizationCodeCallbackKey::CODE());
+        $this->authorizationCode = $codeValue !== null ? new AuthorizationCode($codeValue) : null;
+
+        $stateValue  = $this->findQueryParameter(AuthorizationCodeCallbackKey::STATE());
+        $this->state = $stateValue !== null ? new State($stateValue) : null;
+
+        $challengeValue  = $this->findQueryParameter(AuthorizationCodeCallbackKey::CHALLENGE());
+        $this->challenge = $challengeValue !== null ? new Challenge($challengeValue) : null;
+
+        $this->errorCodeValue   = $this->findQueryParameter(AuthorizationCodeCallbackKey::ERROR());
+        $this->errorDescription = $this->findQueryParameter(AuthorizationCodeCallbackKey::ERROR_DESCRIPTION());
     }
 
     private function findQueryParameter(AuthorizationCodeCallbackKey $parameterKey): ?string
@@ -94,9 +101,9 @@ class AuthorizationCodeCallbackData
 
     private function assertWithoutError(): void
     {
-        if ($this->errorCode !== null) {
+        if ($this->errorCodeValue !== null) {
             throw new AuthorizationCodeCallbackException(
-                $this->errorCode,
+                $this->errorCodeValue,
                 $this->errorDescription
             );
         }
@@ -111,11 +118,11 @@ class AuthorizationCodeCallbackData
             throw new MissingRequiredQueryParametersException(AuthorizationCodeCallbackKey::CODE());
         }
 
-        if ($this->stateValue === null) {
+        if ($this->state === null) {
             throw new MissingRequiredQueryParametersException(AuthorizationCodeCallbackKey::STATE());
         }
 
-        if ($this->challengeValue === null) {
+        if ($this->challenge === null) {
             throw new MissingRequiredQueryParametersException(AuthorizationCodeCallbackKey::CHALLENGE());
         }
     }
