@@ -12,11 +12,11 @@ use GuzzleHttp\Utils;
 use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Models\Contracts\ProviderInterface;
-use Pinnacle\OpenIdConnect\Exceptions\OpenIdRequestFailedException;
+use Pinnacle\OpenIdConnect\Exceptions\OpenIdRequestException;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
-class RequestTokens
+class TokenRequestor
 {
     public function __construct(
         private ProviderInterface $provider,
@@ -77,7 +77,7 @@ class RequestTokens
                     ]
                 );
         } catch (GuzzleException $exception) {
-            throw new OpenIdRequestFailedException('Unable to retrieve OAuth tokens from IdP endpoint.', 0, $exception);
+            throw new OpenIdRequestException('Unable to retrieve OAuth tokens from IdP endpoint.', 0, $exception);
         }
 
         try {
@@ -90,7 +90,7 @@ class RequestTokens
 
             return $jsonObject;
         } catch (InvalidArgumentException $exception) {
-            throw new OpenIdRequestFailedException('Unable to parse JSON response from TOKENS endpoint.', 0, $exception);
+            throw new OpenIdRequestException('Unable to parse JSON response from TOKENS endpoint.', 0, $exception);
         }
     }
 
