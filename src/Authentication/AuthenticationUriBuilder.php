@@ -13,9 +13,9 @@ use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
 
 class AuthenticationUriBuilder
 {
-    private const                 CODE_CHALLENGE_METHOD = 'S256';
+    private const CODE_CHALLENGE_METHOD = 'S256';
 
-    private const                 RESPONSE_TYPE         = 'code';
+    private const RESPONSE_TYPE         = 'code';
 
     private Scopes    $scopes;
 
