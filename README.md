@@ -1,5 +1,7 @@
 <h1 align="center">Openid-Connect</h1>
 
+[![Basic Continuous Integration](https://github.com/pinnacleqi/openid-connect/actions/workflows/basic-continuous-integration.yml/badge.svg)](https://github.com/pinnacleqi/openid-connect/actions/workflows/basic-continuous-integration.yml)
+
 ## Installation
 
 In your composer.json add the following to your "repositories" field:
