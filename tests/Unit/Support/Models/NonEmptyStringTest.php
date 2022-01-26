@@ -2,8 +2,8 @@
 
 namespace Unit\Support\Models;
 
-use Assert\AssertionFailedException;
 use PHPUnit\Framework\TestCase;
+use Pinnacle\OpenIdConnect\Support\Exceptions\EmptyStringException;
 use Pinnacle\OpenIdConnect\Support\Models\NonEmptyString;
 
 class NonEmptyStringTest extends TestCase
@@ -14,7 +14,7 @@ class NonEmptyStringTest extends TestCase
     public function construct_EmptyString_ThrowsException(): void
     {
         // Assert
-        $this->expectException(AssertionFailedException::class);
+        $this->expectException(EmptyStringException::class);
 
         // Act
         new NonEmptyString('');
@@ -26,7 +26,7 @@ class NonEmptyStringTest extends TestCase
     public function construct_StringWithEmptySpace_ThrowsException(): void
     {
         // Assert
-        $this->expectException(AssertionFailedException::class);
+        $this->expectException(EmptyStringException::class);
 
         // Act
         new NonEmptyString(' ');
