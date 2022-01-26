@@ -24,7 +24,7 @@ composer require pinnacle/openid-connect
 To obtain a redirect URL for an OAuth provider:
 
 ```php
-$provider = new Provider(
+$providerConfiguration = new ProviderConfiguration(
         $identifier, // Optional parameter used to identify the provider within the application.
         $clientId,
         $clientSecret,
@@ -39,7 +39,7 @@ $authenticator =  new Authenticator(
 );
 
 $authenticationRedirectUri = $authenticator
-    ->beginAuthentication($provider, $redirectUrl)
+    ->beginAuthentication($providerConfiguration, $redirectUrl)
     ->withScopes('profile', 'email', 'phone')
     ->uri();
 ```
@@ -55,10 +55,10 @@ $authorizationCodeResponse = $authenticator->handleAuthorizationCodeCallback($ca
 $providerId = $authorizationCodeResponse->getProvider()->getIdentifier();
 
 // Fetch access token.
-$accessTokenResponse = $authenticator->fetchAccessTokenWithAuthorizationCode($authorizationCodeResponse);
+$tokensResponse = $authenticator->fetchAccessTokenWithAuthorizationCode($authorizationCodeResponse);
 
 // Fetch user info.
-$userInfo = $authenticator->fetchUserInformationWithAccessToken($accessTokenResponse);
+$userInfo = $authenticator->fetchUserInformationWithAccessToken($tokensResponse);
 
 // e.g. getting the user's subject identifier:
 $subjectIdentifier = $userInfo->getSubjectIdentifier();
