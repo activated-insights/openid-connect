@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenIdConnect\Exceptions;
+namespace Pinnacle\OpenIdConnect\Support\Exceptions;
 
 use DomainException;
 
 /**
  * An exception thrown when OAuth authentication fails.
  */
-class OAuthFailedException extends DomainException
+class OpenIdConnectException extends DomainException
 {
 }

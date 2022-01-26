@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Pinnacle\OpenIdConnect\Dtos;
+namespace Pinnacle\OpenIdConnect\UserInfo\Models;
 
 use Pinnacle\CommonValueObjects\EmailAddress;
-use Pinnacle\OpenIdConnect\Exceptions\OAuthFailedException;
+use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
 use stdClass;
 
-class UserInfoDto
+class UserInfo
 {
-    private string       $subjectIdentifier;
+    private SubjectIdentifier $subjectIdentifier;
 
-    private string       $fullName;
+    private FullName          $fullName;
 
-    private EmailAddress $emailAddress;
+    private EmailAddress      $emailAddress;
 
-    private bool         $emailAddressVerified;
+    private bool              $emailAddressVerified;
 
     public function __construct(
-        string $subjectIdentifier,
-        string $fullName,
-        EmailAddress $emailAddress,
-        bool $emailAddressVerified
+        SubjectIdentifier $subjectIdentifier,
+        FullName          $fullName,
+        EmailAddress      $emailAddress,
+        bool              $emailAddressVerified
     ) {
         $this->subjectIdentifier    = $subjectIdentifier;
         $this->fullName             = $fullName;
@@ -31,25 +31,25 @@ class UserInfoDto
     }
 
     /**
-     * @throws OAuthFailedException
+     * @throws OpenIdConnectException
      */
     public static function createWithJson(stdClass $json): self
     {
         if (!isset($json->sub) || !is_string($json->sub)) {
-            throw new OAuthFailedException('The subject identifier of the user was not found.');
+            throw new OpenIdConnectException('The subject identifier of the user was not found.');
         }
         if (!isset($json->name) || !is_string($json->name)) {
-            throw new OAuthFailedException('The name of the user was not found.');
+            throw new OpenIdConnectException('The name of the user was not found.');
         }
         if (!isset($json->email) || !is_string($json->email)) {
-            throw new OAuthFailedException('The email address of the user was not found.');
+            throw new OpenIdConnectException('The email address of the user was not found.');
         }
 
         // The email_verified value is not always returned. Handle as a special case.
         if (isset($json->email_verified)) {
             // Sometimes it's passed as a string value, even though the spec says it should be a boolean.
             if (!is_string($json->email_verified) && !is_bool($json->email_verified)) {
-                throw new OAuthFailedException(
+                throw new OpenIdConnectException(
                     'The email verification value of the user was set, but is not a string or boolean value.'
                 );
             }
@@ -62,19 +62,19 @@ class UserInfoDto
         }
 
         return new self(
-            $json->sub,
-            $json->name,
+            new SubjectIdentifier($json->sub),
+            new FullName($json->name),
             new EmailAddress($json->email),
             $emailVerified
         );
     }
 
-    public function getSubjectIdentifier(): string
+    public function getSubjectIdentifier(): SubjectIdentifier
     {
         return $this->subjectIdentifier;
     }
 
-    public function getFullName(): string
+    public function getFullName(): FullName
     {
         return $this->fullName;
     }
