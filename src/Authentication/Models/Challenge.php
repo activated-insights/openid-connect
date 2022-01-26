@@ -14,8 +14,12 @@ class Challenge extends NonEmptyString
         return new self(self::generateCodeChallenge());
     }
 
-    public function equals(Challenge $challenge): bool
+    public function equals(?Challenge $challenge): bool
     {
+        if ($challenge === null) {
+            return false;
+        }
+
         return $this->getValue() === $challenge->getValue();
     }
 

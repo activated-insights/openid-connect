@@ -50,4 +50,19 @@ class ChallengeTest extends TestCase
         // Assert
         $this->assertFalse($output);
     }
+
+    /**
+     * @test
+     */
+    public function equals_WithNull_ExpectFalse(): void
+    {
+        // Assemble
+        $challenge = Challenge::createWithRandomChallenge();
+
+        // Act
+        $output = $challenge->equals(null);
+
+        // Assert
+        $this->assertFalse($output);
+    }
 }
