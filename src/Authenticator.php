@@ -114,12 +114,12 @@ class Authenticator
         return new TokensResponse($accessToken, $authorizationCodeResponse->getProvider());
     }
 
-    public function fetchUserInformationWithAccessToken(TokensResponse $authenticationTokensResponse
+    public function fetchUserInformationWithAccessToken(TokensResponse $tokensResponse
     ): UserInfo {
         // TODO:: We will be replacing this call and instead be parsing the JWT.
         return RequestUserInfo::execute(
-            $authenticationTokensResponse->getProvider(),
-            $authenticationTokensResponse->getAccessToken(),
+            $tokensResponse->getProvider(),
+            $tokensResponse->getAccessToken(),
             $this->logger
         );
     }
