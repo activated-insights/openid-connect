@@ -20,25 +20,25 @@ use MyCLabs\Enum\Enum;
  */
 class AuthenticationErrorCode extends Enum
 {
-    const INVALID_REQUEST            = 'invalid_request';
+    protected const INVALID_REQUEST            = 'invalid_request';
 
-    const INTERACTION_REQUIRED       = 'interaction_required';
+    protected const INTERACTION_REQUIRED       = 'interaction_required';
 
-    const LOGIN_REQUIRED             = 'login_required';
+    protected const LOGIN_REQUIRED             = 'login_required';
 
-    const ACCOUNT_SELECTION_REQUIRED = 'account_selection_required';
+    protected const ACCOUNT_SELECTION_REQUIRED = 'account_selection_required';
 
-    const CONSENT_REQUIRED           = 'consent_required';
+    protected const CONSENT_REQUIRED           = 'consent_required';
 
-    const INVALID_REQUEST_URI        = 'invalid_request_uri';
+    protected const INVALID_REQUEST_URI        = 'invalid_request_uri';
 
-    const INVALID_REQUEST_OBJECT     = 'invalid_request_object';
+    protected const INVALID_REQUEST_OBJECT     = 'invalid_request_object';
 
-    const REQUEST_NOT_SUPPORTED      = 'request_not_supported';
+    protected const REQUEST_NOT_SUPPORTED      = 'request_not_supported';
 
-    const REQUEST_URI_NOT_SUPPORTED  = 'request_uri_not_supported';
+    protected const REQUEST_URI_NOT_SUPPORTED  = 'request_uri_not_supported';
 
-    const REGISTRATION_NOT_SUPPORTED = 'registration_not_supported';
+    protected const REGISTRATION_NOT_SUPPORTED = 'registration_not_supported';
 
     public static function getDescription(string $errorCodeValue): string
     {
