@@ -40,9 +40,6 @@ class AuthorizationCodeCallbackData
         $this->assertHasRequiredParameters();
     }
 
-    /**
-     * @throws MissingRequiredQueryParametersException
-     */
     public function getAuthorizationCode(): AuthorizationCode
     {
         if ($this->authorizationCode === null) {
@@ -52,9 +49,6 @@ class AuthorizationCodeCallbackData
         return $this->authorizationCode;
     }
 
-    /**
-     * @throws MissingRequiredQueryParametersException
-     */
     public function getState(): State
     {
         if ($this->state === null) {
@@ -64,9 +58,6 @@ class AuthorizationCodeCallbackData
         return $this->state;
     }
 
-    /**
-     * @throws MissingRequiredQueryParametersException
-     */
     public function getChallenge(): Challenge
     {
         if ($this->challenge === null) {
