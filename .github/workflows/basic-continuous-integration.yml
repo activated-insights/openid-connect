@@ -1,0 +1,42 @@
+name: Basic Continuous Integration
+
+on: [ push ]
+
+jobs:
+  phpunit-unit:
+    name: PHPUnit Unit Tests
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          ini-values: assert.exception=1, zend.assertions=1
+
+      - name: Cache Composer packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.composer/cache/files
+          key: composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: Execute unit tests
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+
+      - name: Monitor coverage
+
+        if: github.event_name == 'pull_request'
+
+        uses: slavcodev/coverage-monitor-action@1.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          clover_file: coverage.xml
+          threshold_alert: 0
+          threshold_warning: 95
