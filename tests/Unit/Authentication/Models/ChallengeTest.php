@@ -10,59 +10,27 @@ class ChallengeTest extends TestCase
     /**
      * @test
      */
-    public function createWithRandomChallenge_functionCall_Generates43CharacterString(): void
+    public function createWithRandomString_functionCall_Generates43CharacterString(): void
     {
         // Act
-        $challenge = Challenge::createWithRandomChallenge();
+        $challenge = Challenge::createWithRandomString();
 
         // Assert
-        $this->assertEquals(43, strlen($challenge->getValue()));
+        $this->assertEquals(64, strlen($challenge->getValue()));
     }
 
     /**
      * @test
      */
-    public function equals_TwoEqualChallenges_ExpectTrue(): void
+    public function hash_ReturnsExpectedStringLength(): void
     {
         // Assemble
-        $challengeOne = Challenge::createWithRandomChallenge();
-        $challengeTwo = new Challenge($challengeOne->getValue());
+        $challenge = Challenge::createWithRandomString();
 
         // Act
-        $output = $challengeOne->equals($challengeTwo);
+        $output = $challenge->hash();
 
         // Assert
-        $this->assertTrue($output);
-    }
-
-    /**
-     * @test
-     */
-    public function equals_TwoInEqualChallenges_ExpectFalse(): void
-    {
-        // Assemble
-        $challengeOne = Challenge::createWithRandomChallenge();
-        $challengeTwo = Challenge::createWithRandomChallenge();
-
-        // Act
-        $output = $challengeOne->equals($challengeTwo);
-
-        // Assert
-        $this->assertFalse($output);
-    }
-
-    /**
-     * @test
-     */
-    public function equals_WithNull_ExpectFalse(): void
-    {
-        // Assemble
-        $challenge = Challenge::createWithRandomChallenge();
-
-        // Act
-        $output = $challenge->equals(null);
-
-        // Assert
-        $this->assertFalse($output);
+        $this->assertEquals(43, strlen($output));
     }
 }

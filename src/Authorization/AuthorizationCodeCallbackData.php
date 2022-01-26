@@ -3,7 +3,6 @@
 namespace Pinnacle\OpenIdConnect\Authorization;
 
 use GuzzleHttp\Psr7\Uri;
-use Pinnacle\OpenIdConnect\Authentication\Models\Challenge;
 use Pinnacle\OpenIdConnect\Authentication\Models\State;
 use Pinnacle\OpenIdConnect\Authorization\Constants\AuthorizationCodeCallbackKey;
 use Pinnacle\OpenIdConnect\Authorization\Exceptions\AuthorizationCodeCallbackException;
@@ -20,8 +19,6 @@ class AuthorizationCodeCallbackData
     private ?AuthorizationCode $authorizationCode = null;
 
     private ?State             $state             = null;
-
-    private ?Challenge         $challenge         = null;
 
     private ?string            $errorCodeValue    = null;
 
@@ -58,15 +55,6 @@ class AuthorizationCodeCallbackData
         return $this->state;
     }
 
-    public function getChallenge(): Challenge
-    {
-        if ($this->challenge === null) {
-            throw new MissingRequiredQueryParametersException(AuthorizationCodeCallbackKey::CHALLENGE());
-        }
-
-        return $this->challenge;
-    }
-
     /**
      * @param Uri $callbackUri
      *
@@ -82,9 +70,6 @@ class AuthorizationCodeCallbackData
 
         $stateValue  = $this->findQueryParameter(AuthorizationCodeCallbackKey::STATE());
         $this->state = $stateValue !== null ? new State($stateValue) : null;
-
-        $challengeValue  = $this->findQueryParameter(AuthorizationCodeCallbackKey::CHALLENGE());
-        $this->challenge = $challengeValue !== null ? new Challenge($challengeValue) : null;
 
         $this->errorCodeValue   = $this->findQueryParameter(AuthorizationCodeCallbackKey::ERROR());
         $this->errorDescription = $this->findQueryParameter(AuthorizationCodeCallbackKey::ERROR_DESCRIPTION());
@@ -120,10 +105,6 @@ class AuthorizationCodeCallbackData
 
         if ($this->state === null) {
             throw new MissingRequiredQueryParametersException(AuthorizationCodeCallbackKey::STATE());
-        }
-
-        if ($this->challenge === null) {
-            throw new MissingRequiredQueryParametersException(AuthorizationCodeCallbackKey::CHALLENGE());
         }
     }
 }

@@ -74,16 +74,6 @@ class Authenticator
         $provider    = $statePersisterWrapper->getProvider();
         $redirectUri = $statePersisterWrapper->getRedirectUri();
 
-        if (!$callbackData->getChallenge()->equals($challenge)) {
-            throw new ChallengeMismatchException(
-                sprintf(
-                    'Response challenge %s does not match the original request %s.',
-                    $callbackData->getChallenge()->getValue(),
-                    $challenge->getValue()
-                )
-            );
-        }
-
         return new AuthorizationCodeResponse(
             $callbackData->getAuthorizationCode(),
             $provider,

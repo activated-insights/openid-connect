@@ -30,7 +30,7 @@ class AuthenticationUriBuilder
     {
         $this->scopes        = new Scopes();
         $this->state         = State::createWithRandomString();
-        $this->codeChallenge = Challenge::createWithRandomChallenge();
+        $this->codeChallenge = Challenge::createWithRandomString();
     }
 
     public function getState(): State
@@ -70,7 +70,7 @@ class AuthenticationUriBuilder
             'scope'                 => $this->scopes->getScopesAsString(),
             'state'                 => $this->state->getValue(),
             'code_challenge_method' => self::CODE_CHALLENGE_METHOD,
-            'code_challenge'        => $this->codeChallenge->getValue(),
+            'code_challenge'        => $this->codeChallenge->hash(),
         ];
     }
 }

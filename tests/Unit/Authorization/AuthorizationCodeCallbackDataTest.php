@@ -43,14 +43,12 @@ class AuthorizationCodeCallbackDataTest extends TestCase
     public function construct_MissingAuthorizationCode_ThrowsExpectedException(): void
     {
         // Assemble
-        $state     = State::createWithRandomString();
-        $challenge = Challenge::createWithRandomChallenge();
+        $state = State::createWithRandomString();
 
         $callbackUri = new Uri(
             'https://callback.test?' . http_build_query(
                 [
-                    'state'          => $state->getValue(),
-                    'code_challenge' => $challenge->getValue(),
+                    'state' => $state->getValue(),
                 ]
             )
         );
@@ -69,13 +67,11 @@ class AuthorizationCodeCallbackDataTest extends TestCase
     {
         // Assemble
         $authorizationCode = new AuthorizationCode('authorization-code');
-        $challenge         = Challenge::createWithRandomChallenge();
 
         $callbackUri = new Uri(
             'https://callback.test?' . http_build_query(
                 [
-                    'code'           => $authorizationCode,
-                    'code_challenge' => $challenge->getValue(),
+                    'code' => $authorizationCode,
                 ]
             )
         );
@@ -120,14 +116,12 @@ class AuthorizationCodeCallbackDataTest extends TestCase
         // Assemble
         $authorizationCode = new AuthorizationCode('authorization-code');
         $state             = State::createWithRandomString();
-        $challenge         = Challenge::createWithRandomChallenge();
 
         $callbackUri = new Uri(
             'https://callback.test?' . http_build_query(
                 [
-                    'code'           => $authorizationCode->getValue(),
-                    'state'          => $state->getValue(),
-                    'code_challenge' => $challenge->getValue(),
+                    'code'  => $authorizationCode->getValue(),
+                    'state' => $state->getValue(),
                 ]
             )
         );
@@ -147,14 +141,12 @@ class AuthorizationCodeCallbackDataTest extends TestCase
         // Assemble
         $authorizationCode = new AuthorizationCode('authorization-code');
         $state             = State::createWithRandomString();
-        $challenge         = Challenge::createWithRandomChallenge();
 
         $callbackUri = new Uri(
             'https://callback.test?' . http_build_query(
                 [
-                    'code'           => $authorizationCode->getValue(),
-                    'state'          => $state->getValue(),
-                    'code_challenge' => $challenge->getValue(),
+                    'code'  => $authorizationCode->getValue(),
+                    'state' => $state->getValue(),
                 ]
             )
         );
@@ -164,32 +156,5 @@ class AuthorizationCodeCallbackDataTest extends TestCase
 
         // Assert
         $this->assertInstanceOf(State::class, $callbackData->getState());
-    }
-
-    /**
-     * @test
-     */
-    public function getChallenge_WithChallenge_ReturnsChallenge(): void
-    {
-        // Assemble
-        $authorizationCode = new AuthorizationCode('authorization-code');
-        $state             = State::createWithRandomString();
-        $challenge         = Challenge::createWithRandomChallenge();
-
-        $callbackUri = new Uri(
-            'https://callback.test?' . http_build_query(
-                [
-                    'code'           => $authorizationCode->getValue(),
-                    'state'          => $state->getValue(),
-                    'code_challenge' => $challenge->getValue(),
-                ]
-            )
-        );
-
-        // Act
-        $callbackData = new AuthorizationCodeCallbackData($callbackUri);
-
-        // Assert
-        $this->assertInstanceOf(Challenge::class, $callbackData->getChallenge());
     }
 }

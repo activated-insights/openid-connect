@@ -37,7 +37,7 @@ class AuthorizationCodeResponseTest extends TestCase
             $userInfoEndpoint
         );
         $redirectUri           = new Uri('https://uri.test/redirect');
-        $challenge             = Challenge::createWithRandomChallenge();
+        $challenge             = Challenge::createWithRandomString();
 
         $authorizationCodeResponse = new AuthorizationCodeResponse(
             $authorizationCode,
@@ -73,7 +73,7 @@ class AuthorizationCodeResponseTest extends TestCase
             $userInfoEndpoint
         );
         $redirectUri           = new Uri('https://uri.test/redirect');
-        $challenge             = Challenge::createWithRandomChallenge();
+        $challenge             = Challenge::createWithRandomString();
 
         $authorizationCodeResponse = new AuthorizationCodeResponse(
             $authorizationCode,
@@ -109,7 +109,7 @@ class AuthorizationCodeResponseTest extends TestCase
             $userInfoEndpoint
         );
         $redirectUri           = new Uri('https://uri.test/redirect');
-        $challenge             = Challenge::createWithRandomChallenge();
+        $challenge             = Challenge::createWithRandomString();
 
         $authorizationCodeResponse = new AuthorizationCodeResponse(
             $authorizationCode,
@@ -145,7 +145,7 @@ class AuthorizationCodeResponseTest extends TestCase
             $userInfoEndpoint
         );
         $redirectUri           = new Uri('https://uri.test/redirect');
-        $challenge             = Challenge::createWithRandomChallenge();
+        $challenge             = Challenge::createWithRandomString();
 
         $authorizationCodeResponse = new AuthorizationCodeResponse(
             $authorizationCode,

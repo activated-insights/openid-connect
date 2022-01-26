@@ -7,7 +7,7 @@ use Pinnacle\OpenIdConnect\Support\Exceptions\EmptyStringException;
 
 class NonEmptyString
 {
-    public function __construct(private string $value)
+    public function __construct(protected string $value)
     {
         if (trim($value) === '') {
             throw new EmptyStringException(sprintf('%s was provided an empty string in the constructor.', self::class));

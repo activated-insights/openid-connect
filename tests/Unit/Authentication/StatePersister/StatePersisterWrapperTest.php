@@ -25,7 +25,7 @@ class StatePersisterWrapperTest extends TestCase
         // Assemble
         $mockPersister = $this->getMockBuilder(StatePersisterInterface::class)->getMock();
         $state         = State::createWithRandomString();
-        $challenge     = Challenge::createWithRandomChallenge();
+        $challenge     = Challenge::createWithRandomString();
 
         $statePersisterWrapper = new StatePersisterWrapper($mockPersister, $state);
 
@@ -49,7 +49,7 @@ class StatePersisterWrapperTest extends TestCase
         // Assemble
         $mockPersister = $this->getMockBuilder(StatePersisterInterface::class)->getMock();
         $state         = State::createWithRandomString();
-        $challenge     = Challenge::createWithRandomChallenge();
+        $challenge     = Challenge::createWithRandomString();
 
         $statePersisterWrapper = new StatePersisterWrapper($mockPersister, $state);
 

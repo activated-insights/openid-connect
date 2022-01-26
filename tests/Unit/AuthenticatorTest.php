@@ -94,69 +94,6 @@ class AuthenticatorTest extends TestCase
     /**
      * @test
      */
-    public function handleAuthorizationCodeCallback_WithMisMatchChallenge_ThrowsExpectedException(): void
-    {
-        // Assemble
-        $secureRedirectUri     = new Uri('https://uri.test/redirect');
-        $identifier            = new Identifier('identifier');
-        $clientId              = new ClientId('client-id');
-        $clientSecret          = new ClientSecret('client-secret');
-        $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
-        $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
-
-        $misMatchChallenge = Challenge::createWithRandomChallenge();
-        $state             = State::createWithRandomString();
-
-        $statePersister = $this->getMockBuilder(StatePersisterInterface::class)->getMock();
-
-        $statePersister->expects($this->exactly(8))
-                       ->method('getValue')
-                       ->withConsecutive(
-                           [StateKey::CHALLENGE()->withPrefix($state->getValue())],
-                           [StateKey::PROVIDER_IDENTIFIER()->withPrefix($state->getValue())],
-                           [StateKey::PROVIDER_CLIENT_ID()->withPrefix($state->getValue())],
-                           [StateKey::PROVIDER_CLIENT_SECRET()->withPrefix($state->getValue())],
-                           [StateKey::PROVIDER_AUTHORIZATION_ENDPOINT()->withPrefix($state->getValue())],
-                           [StateKey::PROVIDER_TOKEN_ENDPOINT()->withPrefix($state->getValue())],
-                           [StateKey::PROVIDER_USER_INFO_ENDPOINT()->withPrefix($state->getValue())],
-                           [StateKey::REDIRECT_URI()->withPrefix($state->getValue())]
-                       )
-                       ->willReturnOnConsecutiveCalls(
-                           $misMatchChallenge->getValue(),
-                           $identifier->getValue(),
-                           $clientId->getValue(),
-                           $clientSecret->getValue(),
-                           (string)$authorizationEndpoint,
-                           (string)$tokenEndpoint,
-                           (string)$userInfoEndpoint,
-                           (string)$secureRedirectUri,
-                       );
-
-        $authorizationCode = new AuthorizationCode('authorization-code');
-
-        $callbackUri = new Uri(
-            'https://callback.test?' . http_build_query(
-                [
-                    'code'           => $authorizationCode->getValue(),
-                    'state'          => $state->getValue(),
-                    'code_challenge' => Challenge::createWithRandomChallenge()->getValue(),
-                ]
-            )
-        );
-
-        $authenticator = new Authenticator($statePersister);
-
-        // Assert
-        $this->expectException(ChallengeMismatchException::class);
-
-        // Act
-        $authenticator->handleAuthorizationCodeCallback($callbackUri);
-    }
-
-    /**
-     * @test
-     */
     public function handleAuthorizationCodeCallback_WithValidValues_ReturnsAuthorizationCodeResponseObject(): void
     {
         // Assemble
@@ -177,7 +114,7 @@ class AuthenticatorTest extends TestCase
             $userInfoEndpoint
         );
 
-        $challenge = Challenge::createWithRandomChallenge();
+        $challenge = Challenge::createWithRandomString();
         $state     = State::createWithRandomString();
 
         $statePersister = $this->getMockBuilder(StatePersisterInterface::class)->getMock();
