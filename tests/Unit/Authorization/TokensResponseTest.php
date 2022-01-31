@@ -24,7 +24,6 @@ class TokensResponseTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $accessToken           = new AccessToken('access-token');
         $providerConfiguration = new ProviderConfiguration(
@@ -32,8 +31,7 @@ class TokensResponseTest extends TestCase
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $tokensResponse = new TokensResponse($accessToken, $providerConfiguration);
@@ -56,7 +54,6 @@ class TokensResponseTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $accessToken           = new AccessToken('access-token');
         $providerConfiguration = new ProviderConfiguration(
@@ -64,8 +61,7 @@ class TokensResponseTest extends TestCase
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $tokensResponse = new TokensResponse($accessToken, $providerConfiguration);

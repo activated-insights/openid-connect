@@ -29,8 +29,7 @@ $providerConfiguration = new ProviderConfiguration(
         $clientId,
         $clientSecret,
         $authorizationEndpoint,
-        $tokenEndpoint,
-        $userInfoEndpoint
+        $tokenEndpoint
 );
 
 $authenticator =  new Authenticator(

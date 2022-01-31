@@ -18,6 +18,4 @@ interface ProviderConfigurationInterface
     public function getAuthorizationEndpoint(): Uri;
 
     public function getTokenEndpoint(): Uri;
-
-    public function getUserInfoEndpoint(): Uri;
 }

@@ -14,8 +14,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         private ClientId     $clientId,
         private ClientSecret $clientSecret,
         private Uri          $authorizationEndpoint,
-        private Uri          $tokenEndpoint,
-        private Uri          $userInfoEndpoint
+        private Uri          $tokenEndpoint
     ) {
     }
 
@@ -42,10 +41,5 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     public function getTokenEndpoint(): Uri
     {
         return $this->tokenEndpoint;
-    }
-
-    public function getUserInfoEndpoint(): Uri
-    {
-        return $this->userInfoEndpoint;
     }
 }

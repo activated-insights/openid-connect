@@ -34,15 +34,13 @@ class AuthenticatorTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $provider = new ProviderConfiguration(
             $identifier,
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $authenticator = new Authenticator($statePersister);
@@ -69,15 +67,13 @@ class AuthenticatorTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $provider = new ProviderConfiguration(
             $identifier,
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $authenticator = new Authenticator($statePersister);
@@ -103,15 +99,13 @@ class AuthenticatorTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $expectedProvider = new ProviderConfiguration(
             $identifier,
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $challenge = Challenge::createWithRandomString();
@@ -119,7 +113,7 @@ class AuthenticatorTest extends TestCase
 
         $statePersister = $this->getMockBuilder(StatePersisterInterface::class)->getMock();
 
-        $statePersister->expects($this->exactly(8))
+        $statePersister->expects($this->exactly(7))
                        ->method('getValue')
                        ->withConsecutive(
                            [StateKey::CHALLENGE()->withPrefix($state->getValue())],
@@ -128,7 +122,6 @@ class AuthenticatorTest extends TestCase
                            [StateKey::PROVIDER_CLIENT_SECRET()->withPrefix($state->getValue())],
                            [StateKey::PROVIDER_AUTHORIZATION_ENDPOINT()->withPrefix($state->getValue())],
                            [StateKey::PROVIDER_TOKEN_ENDPOINT()->withPrefix($state->getValue())],
-                           [StateKey::PROVIDER_USER_INFO_ENDPOINT()->withPrefix($state->getValue())],
                            [StateKey::REDIRECT_URI()->withPrefix($state->getValue())]
                        )
                        ->willReturnOnConsecutiveCalls(
@@ -138,7 +131,6 @@ class AuthenticatorTest extends TestCase
                            $clientSecret->getValue(),
                            (string)$authorizationEndpoint,
                            (string)$tokenEndpoint,
-                           (string)$userInfoEndpoint,
                            (string)$secureRedirectUri,
                        );
 

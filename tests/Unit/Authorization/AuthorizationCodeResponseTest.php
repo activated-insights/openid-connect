@@ -25,7 +25,6 @@ class AuthorizationCodeResponseTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $authorizationCode     = new AuthorizationCode('authorization-code');
         $providerConfiguration = new ProviderConfiguration(
@@ -33,8 +32,7 @@ class AuthorizationCodeResponseTest extends TestCase
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
         $redirectUri           = new Uri('https://uri.test/redirect');
         $challenge             = Challenge::createWithRandomString();
@@ -61,7 +59,6 @@ class AuthorizationCodeResponseTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $authorizationCode     = new AuthorizationCode('authorization-code');
         $providerConfiguration = new ProviderConfiguration(
@@ -69,8 +66,7 @@ class AuthorizationCodeResponseTest extends TestCase
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
         $redirectUri           = new Uri('https://uri.test/redirect');
         $challenge             = Challenge::createWithRandomString();
@@ -97,7 +93,6 @@ class AuthorizationCodeResponseTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $authorizationCode     = new AuthorizationCode('authorization-code');
         $providerConfiguration = new ProviderConfiguration(
@@ -105,8 +100,7 @@ class AuthorizationCodeResponseTest extends TestCase
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
         $redirectUri           = new Uri('https://uri.test/redirect');
         $challenge             = Challenge::createWithRandomString();
@@ -133,7 +127,6 @@ class AuthorizationCodeResponseTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $authorizationCode     = new AuthorizationCode('authorization-code');
         $providerConfiguration = new ProviderConfiguration(
@@ -141,8 +134,7 @@ class AuthorizationCodeResponseTest extends TestCase
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
         $redirectUri           = new Uri('https://uri.test/redirect');
         $challenge             = Challenge::createWithRandomString();

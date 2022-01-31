@@ -25,15 +25,13 @@ class AuthenticationUriBuilderTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $provider = new ProviderConfiguration(
             $identifier,
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $redirectUri = new Uri('https://uri.test/redirect');
@@ -58,15 +56,13 @@ class AuthenticationUriBuilderTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $provider = new ProviderConfiguration(
             $identifier,
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $redirectUri = new Uri('https://uri.test/redirect');
@@ -91,15 +87,13 @@ class AuthenticationUriBuilderTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $provider = new ProviderConfiguration(
             $identifier,
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $redirectUri = new Uri('https://uri.test/redirect');
@@ -137,15 +131,13 @@ class AuthenticationUriBuilderTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $provider = new ProviderConfiguration(
             $identifier,
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $redirectUri = new Uri('https://uri.test/redirect');
