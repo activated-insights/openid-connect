@@ -121,25 +121,25 @@ class AuthenticatorTest extends TestCase
         $statePersister = $this->getMockBuilder(StatePersisterInterface::class)->getMock();
 
         $statePersister->expects($this->exactly(7))
-            ->method('getValue')
-            ->withConsecutive(
-                [StateKey::CHALLENGE()->withPrefix($state->getValue())],
-                [StateKey::PROVIDER_IDENTIFIER()->withPrefix($state->getValue())],
-                [StateKey::PROVIDER_CLIENT_ID()->withPrefix($state->getValue())],
-                [StateKey::PROVIDER_CLIENT_SECRET()->withPrefix($state->getValue())],
-                [StateKey::PROVIDER_AUTHORIZATION_ENDPOINT()->withPrefix($state->getValue())],
-                [StateKey::PROVIDER_TOKEN_ENDPOINT()->withPrefix($state->getValue())],
-                [StateKey::REDIRECT_URI()->withPrefix($state->getValue())]
-            )
-            ->willReturnOnConsecutiveCalls(
-                $challenge->getValue(),
-                $identifier->getValue(),
-                $clientId->getValue(),
-                $clientSecret->getValue(),
-                (string)$authorizationEndpoint,
-                (string)$tokenEndpoint,
-                (string)$secureRedirectUri,
-            );
+                       ->method('getValue')
+                       ->withConsecutive(
+                           [StateKey::CHALLENGE()->withPrefix($state->getValue())],
+                           [StateKey::PROVIDER_IDENTIFIER()->withPrefix($state->getValue())],
+                           [StateKey::PROVIDER_CLIENT_ID()->withPrefix($state->getValue())],
+                           [StateKey::PROVIDER_CLIENT_SECRET()->withPrefix($state->getValue())],
+                           [StateKey::PROVIDER_AUTHORIZATION_ENDPOINT()->withPrefix($state->getValue())],
+                           [StateKey::PROVIDER_TOKEN_ENDPOINT()->withPrefix($state->getValue())],
+                           [StateKey::REDIRECT_URI()->withPrefix($state->getValue())]
+                       )
+                       ->willReturnOnConsecutiveCalls(
+                           $challenge->getValue(),
+                           $identifier->getValue(),
+                           $clientId->getValue(),
+                           $clientSecret->getValue(),
+                           (string)$authorizationEndpoint,
+                           (string)$tokenEndpoint,
+                           (string)$secureRedirectUri,
+                       );
 
         $authorizationCode = new AuthorizationCode('authorization-code');
 
