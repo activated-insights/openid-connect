@@ -69,7 +69,7 @@ class UserIdTokenTest extends TestCase
         $expectedExpirationTime    = 1311281970;
         $expectedIssuedTime        = 1311280970;
 
-        $token = $this->generateFakeJwtWithPayloadValues(
+        $token = $this->generateJwtWithPayloadValues(
             [
                 'sub' => $expectedSubjectIdentifier,
                 'aud' => $expectedAudience,
@@ -96,7 +96,7 @@ class UserIdTokenTest extends TestCase
         $expectedExpirationTime   = 1311281970;
         $expectedIssuedTime       = 1311280970;
 
-        $token = $this->generateFakeJwtWithPayloadValues(
+        $token = $this->generateJwtWithPayloadValues(
             [
                 'iss' => $expectedIssuerIdentifier,
                 'aud' => $expectedAudience,
@@ -123,7 +123,7 @@ class UserIdTokenTest extends TestCase
         $expectedExpirationTime    = 1311281970;
         $expectedIssuedTime        = 1311280970;
 
-        $token = $this->generateFakeJwtWithPayloadValues(
+        $token = $this->generateJwtWithPayloadValues(
             [
                 'iss' => $expectedIssuerIdentifier,
                 'sub' => $expectedSubjectIdentifier,
@@ -150,7 +150,7 @@ class UserIdTokenTest extends TestCase
         $expectedAudience          = 'sdlakjfaldj';
         $expectedIssuedTime        = 1311280970;
 
-        $token = $this->generateFakeJwtWithPayloadValues(
+        $token = $this->generateJwtWithPayloadValues(
             [
                 'iss' => $expectedIssuerIdentifier,
                 'sub' => $expectedSubjectIdentifier,
@@ -177,7 +177,7 @@ class UserIdTokenTest extends TestCase
         $expectedAudience          = 'sdlakjfaldj';
         $expectedExpirationTime    = 1311281970;
 
-        $token = $this->generateFakeJwtWithPayloadValues(
+        $token = $this->generateJwtWithPayloadValues(
             [
                 'iss' => $expectedIssuerIdentifier,
                 'sub' => $expectedSubjectIdentifier,
@@ -205,7 +205,7 @@ class UserIdTokenTest extends TestCase
         $expectedExpirationTime    = 1311281970;
         $expectedIssuedTime        = 1311280970;
 
-        $token = $this->generateFakeJwtWithPayloadValues(
+        $token = $this->generateJwtWithPayloadValues(
             [
                 'iss' => $expectedIssuerIdentifier,
                 'sub' => $expectedSubjectIdentifier,
@@ -238,7 +238,7 @@ class UserIdTokenTest extends TestCase
         $expirationTime    = 1311281970;
         $issuedTime        = 1311280970;
 
-        $token = $this->generateFakeJwtWithPayloadValues(
+        $token = $this->generateJwtWithPayloadValues(
             [
                 'iss' => $issuerIdentifier,
                 'sub' => $subjectIdentifier,

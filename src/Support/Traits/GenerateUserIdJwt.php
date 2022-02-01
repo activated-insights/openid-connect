@@ -22,7 +22,7 @@ trait GenerateUserIdJwt
         int          $expirationTime,
         int          $issuedTime
     ): string {
-        return $this->generateFakeJwtWithPayloadValues(
+        return $this->generateJwtWithPayloadValues(
             [
                 'iss' => $issuerIdentifier,
                 'sub' => $subjectIdentifier,
@@ -33,9 +33,9 @@ trait GenerateUserIdJwt
         );
     }
 
-    private function generateFakeJwtWithPayloadValues(array $payloadValues): string
+    private function generateJwtWithPayloadValues(array $payloadValues): string
     {
-        $header  = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+        $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
         $payload = json_encode($payloadValues);
 
         $base64Header = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
