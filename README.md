@@ -50,15 +50,27 @@ $authenticator = new Authenticator($statePersistor, $logger)
 
 $authorizationCodeResponse = $authenticator->handleAuthorizationCodeCallback($callbackUri);
 
-// Get the provider id.
-$providerId = $authorizationCodeResponse->getProvider()->getIdentifier();
+// Fetch tokens.
+$tokensResponse = $authenticator->fetchTokensWithAuthorizationCode($authorizationCodeResponse);
 
-// Fetch access token.
-$tokensResponse = $authenticator->fetchAccessTokenWithAuthorizationCode($authorizationCodeResponse);
+// Get provider identifier that was passed with the initial configuration.
+$providerId = $tokensResponse->getProvider()->getIdentifier();
 
-// Fetch user info.
-$userInfo = $authenticator->fetchUserInformationWithAccessToken($tokensResponse);
+// Get access_token.
+$accessToken = $tokensResponse->getAccessToken();
 
-// e.g. getting the user's subject identifier:
-$subjectIdentifier = $userInfo->getSubjectIdentifier();
+// Get id_token.
+$userIdToken = $tokensResponse->getUserIdToken();
+
+// Get subject identifier from id_token.
+$subjectIdentifier = $userIdToken->getSubjectIdentifier();
+
+// Check if a claim key exists in the id_token.
+$claimExists = $userIdToken->hasClaimKey('foo');
+
+// Access claims from the id_token (Returns null if the requested claim cannot be found).
+$nameClaim  = $userIdToken->findClaimByKey('name');
+$emailClaim = $userIdToken->findClaimByKey('email');
+
+
 ```
