@@ -9,10 +9,15 @@ use Pinnacle\OpenIdConnect\Provider\Models\ClientId;
 use Pinnacle\OpenIdConnect\Provider\Models\ClientSecret;
 use Pinnacle\OpenIdConnect\Provider\Models\Identifier;
 use Pinnacle\OpenIdConnect\Provider\Models\ProviderConfiguration;
+use Pinnacle\OpenIdConnect\Support\Traits\GenerateUserIdJwt;
 use Pinnacle\OpenIdConnect\Tokens\Models\AccessToken;
+use Pinnacle\OpenIdConnect\Tokens\Models\Tokens;
+use Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken\UserIdToken;
 
 class TokensResponseTest extends TestCase
 {
+    use GenerateUserIdJwt;
+
     /**
      * @test
      */
@@ -25,7 +30,11 @@ class TokensResponseTest extends TestCase
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
 
-        $accessToken           = new AccessToken('access-token');
+        $accessToken = new AccessToken('access-token');
+        $userIdToken = new UserIdToken($this->generateRandomJwt());
+
+        $tokens = new Tokens($accessToken, $userIdToken);
+
         $providerConfiguration = new ProviderConfiguration(
             $identifier,
             $clientId,
@@ -34,13 +43,47 @@ class TokensResponseTest extends TestCase
             $tokenEndpoint
         );
 
-        $tokensResponse = new TokensResponse($accessToken, $providerConfiguration);
+        $tokensResponse = new TokensResponse($tokens, $providerConfiguration);
 
         // Act
         $returnedAccessToken = $tokensResponse->getAccessToken();
 
         // Assert
         $this->assertSame($accessToken, $returnedAccessToken);
+    }
+
+    /**
+     * @test
+     */
+    public function getUserIdToken_ReturnsExpectedUserIdToken(): void
+    {
+        // Assemble
+        $identifier            = new Identifier('identifier');
+        $clientId              = new ClientId('client-id');
+        $clientSecret          = new ClientSecret('client-secret');
+        $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
+        $tokenEndpoint         = new Uri('https://endpoint.test/token');
+
+        $accessToken = new AccessToken('access-token');
+        $userIdToken = new UserIdToken($this->generateRandomJwt());
+
+        $tokens = new Tokens($accessToken, $userIdToken);
+
+        $providerConfiguration = new ProviderConfiguration(
+            $identifier,
+            $clientId,
+            $clientSecret,
+            $authorizationEndpoint,
+            $tokenEndpoint
+        );
+
+        $tokensResponse = new TokensResponse($tokens, $providerConfiguration);
+
+        // Act
+        $returnedUserIdToken = $tokensResponse->getUserIdToken();
+
+        // Assert
+        $this->assertSame($userIdToken, $returnedUserIdToken);
     }
 
     /**
@@ -55,7 +98,11 @@ class TokensResponseTest extends TestCase
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
 
-        $accessToken           = new AccessToken('access-token');
+        $accessToken = new AccessToken('access-token');
+        $userIdToken = new UserIdToken($this->generateRandomJwt());
+
+        $tokens = new Tokens($accessToken, $userIdToken);
+
         $providerConfiguration = new ProviderConfiguration(
             $identifier,
             $clientId,
@@ -64,7 +111,7 @@ class TokensResponseTest extends TestCase
             $tokenEndpoint
         );
 
-        $tokensResponse = new TokensResponse($accessToken, $providerConfiguration);
+        $tokensResponse = new TokensResponse($tokens, $providerConfiguration);
 
         // Act
         $returnedProvider = $tokensResponse->getProvider();
