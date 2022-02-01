@@ -5,6 +5,7 @@ namespace Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken;
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\InvalidUserIdTokenException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\MissingRequiredClaimKeyException;
+use Pinnacle\OpenIdConnect\Tokens\Exceptions\UserIdTokenHasExpiredException;
 use Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken\Constants\ClaimKey;
 
 class UserIdToken
@@ -27,6 +28,7 @@ class UserIdToken
     /**
      * @throws InvalidUserIdTokenException
      * @throws MissingRequiredClaimKeyException
+     * @throws UserIdTokenHasExpiredException
      */
     public function __construct(private string $token)
     {
@@ -47,6 +49,8 @@ class UserIdToken
         $this->audiences         = new Audiences($this->findClaimByKey(ClaimKey::AUDIENCES()->getValue()));
         $this->expirationTime    = (int)$this->findClaimByKey(ClaimKey::EXPIRATION_TIME()->getValue());
         $this->issuedTime        = (int)$this->findClaimByKey(ClaimKey::ISSUED_TIME()->getValue());
+
+        $this->assertTokenHasNotExpired();
     }
 
     /**
@@ -112,6 +116,24 @@ class UserIdToken
             if (!isset($this->parsedValues[$requiredClaimKey->getValue()])) {
                 throw new MissingRequiredClaimKeyException($requiredClaimKey);
             }
+        }
+    }
+
+    /**
+     * @throws UserIdTokenHasExpiredException
+     */
+    private function assertTokenHasNotExpired(): void
+    {
+        $currentTime = time();
+
+        if ($currentTime >= $this->expirationTime) {
+            throw new UserIdTokenHasExpiredException(
+                sprintf(
+                    'The user id token has expired. expirationTime: %u, currentTime %u',
+                    $this->expirationTime,
+                    $currentTime
+                )
+            );
         }
     }
 

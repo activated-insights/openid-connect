@@ -10,8 +10,8 @@ trait GenerateUserIdJwt
             'https://test.dev',
             'subject-identifier',
             'audience',
-            1311281970,
-            1311280970
+            time() + 60,
+            time()
         );
     }
 
@@ -35,7 +35,7 @@ trait GenerateUserIdJwt
 
     private function generateJwtWithPayloadValues(array $payloadValues): string
     {
-        $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+        $header  = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
         $payload = json_encode($payloadValues);
 
         $base64Header = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));

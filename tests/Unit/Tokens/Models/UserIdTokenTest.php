@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Pinnacle\OpenIdConnect\Support\Traits\GenerateUserIdJwt;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\InvalidUserIdTokenException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\MissingRequiredClaimKeyException;
+use Pinnacle\OpenIdConnect\Tokens\Exceptions\UserIdTokenHasExpiredException;
 use Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken\Audience;
 use Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken\UserIdToken;
 
@@ -196,14 +197,43 @@ class UserIdTokenTest extends TestCase
     /**
      * @test
      */
+    public function construct_WithExpiredToken_ThrowsExpectedException(): void
+    {
+        // Assemble
+        $issuerIdentifier  = 'https://example.com';
+        $subjectIdentifier = '1203212312';
+        $audience          = 'audience';
+        $expirationTime    = 1311281970;
+        $issuedTime        = 1311280970;
+
+        $token = $this->generateJwtWithPayloadValues(
+            [
+                'iss' => $issuerIdentifier,
+                'sub' => $subjectIdentifier,
+                'aud' => $audience,
+                'exp' => $expirationTime,
+                'iat' => $issuedTime,
+            ]
+        );
+
+        // Assert
+        $this->expectException(UserIdTokenHasExpiredException::class);
+
+        // Act
+        new UserIdToken($token);
+    }
+
+    /**
+     * @test
+     */
     public function construct_validTokens_returnsExpectedValues(): void
     {
         // Assert
         $expectedIssuerIdentifier  = 'https://example.com';
         $expectedSubjectIdentifier = '1203212312';
         $expectedAudience          = 'sdlakjfaldj';
-        $expectedExpirationTime    = 1311281970;
-        $expectedIssuedTime        = 1311280970;
+        $expectedExpirationTime    = time() + 60;
+        $expectedIssuedTime        = time();
 
         $token = $this->generateJwtWithPayloadValues(
             [
@@ -235,8 +265,8 @@ class UserIdTokenTest extends TestCase
         $issuerIdentifier  = 'https://example.com';
         $subjectIdentifier = '1203212312';
         $audiences         = ['audience-one', 'audience-two'];
-        $expirationTime    = 1311281970;
-        $issuedTime        = 1311280970;
+        $expirationTime    = time() + 60;
+        $issuedTime        = time();
 
         $token = $this->generateJwtWithPayloadValues(
             [
