@@ -6,7 +6,6 @@ use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Pinnacle\OpenIdConnect\Authentication\AuthenticationUriBuilder;
 use Pinnacle\OpenIdConnect\Authentication\Constants\StateKey;
-use Pinnacle\OpenIdConnect\Authentication\Exceptions\ChallengeMismatchException;
 use Pinnacle\OpenIdConnect\Authentication\Models\Challenge;
 use Pinnacle\OpenIdConnect\Authentication\Models\State;
 use Pinnacle\OpenIdConnect\Authentication\StatePersister\Contracts\StatePersisterInterface;
@@ -165,14 +164,6 @@ class AuthenticatorTest extends TestCase
      * @test
      */
     public function fetchTokensWithAuthorizationCode_WithValidValues_ReturnsTokensResponseObject(): void
-    {
-        $this->markTestIncomplete();
-    }
-
-    /**
-     * @test
-     */
-    public function fetchUserInformationWithAccessToken_WithValidValues_ReturnsUserInfoObject(): void
     {
         $this->markTestIncomplete();
     }
