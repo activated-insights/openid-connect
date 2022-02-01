@@ -106,13 +106,13 @@ class TokensRequestor
 
         $accessToken = new AccessToken($jsonResponse->access_token);
 
-        if (!isset($jsonResponse->user_id)) {
+        if (!isset($jsonResponse->id_token)) {
             throw new UserIdTokenNotFoundException(
-                sprintf('user_id not found in JSON response %s.', json_encode($jsonResponse))
+                sprintf('id_token not found in JSON response %s.', json_encode($jsonResponse))
             );
         }
 
-        $userIdToken = new UserIdToken($jsonResponse->user_id);
+        $userIdToken = new UserIdToken($jsonResponse->id_token);
 
         return new Tokens($accessToken, $userIdToken);
     }
