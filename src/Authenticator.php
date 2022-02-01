@@ -89,14 +89,14 @@ class Authenticator
     public function fetchTokensWithAuthorizationCode(
         AuthorizationCodeResponse $authorizationCodeResponse
     ): TokensResponse {
-        $tokenRequestor = new TokensRequestor(
+        $tokensRequestor = new TokensRequestor(
             $authorizationCodeResponse->getProvider(),
             $authorizationCodeResponse->getRedirectUri(),
             $authorizationCodeResponse->getChallenge(),
             $this->logger
         );
 
-        $tokens = $tokenRequestor->fetchTokensForAuthorizationCode(
+        $tokens = $tokensRequestor->fetchTokensForAuthorizationCode(
             $authorizationCodeResponse->getAuthorizationCode(),
         );
 
