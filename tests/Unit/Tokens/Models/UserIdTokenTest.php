@@ -63,7 +63,7 @@ class UserIdTokenTest extends TestCase
     /**
      * @test
      */
-    public function construct_missingIssuer_ThrowsException(): void
+    public function construct_MissingIssuer_ThrowsException(): void
     {
         // Assemble
         $expectedSubjectIdentifier = '1203212312';
@@ -90,7 +90,7 @@ class UserIdTokenTest extends TestCase
     /**
      * @test
      */
-    public function construct_missingSubjectIdentifier_ThrowsException(): void
+    public function construct_MissingSubjectIdentifier_ThrowsException(): void
     {
         // Assemble
         $expectedIssuerIdentifier = 'https://example.com';
@@ -117,7 +117,7 @@ class UserIdTokenTest extends TestCase
     /**
      * @test
      */
-    public function construct_missingAudience_ThrowsException(): void
+    public function construct_MissingAudience_ThrowsException(): void
     {
         // Assemble
         $expectedIssuerIdentifier  = 'https://example.com';
@@ -144,7 +144,7 @@ class UserIdTokenTest extends TestCase
     /**
      * @test
      */
-    public function construct_missingExpirationTime_ThrowsException(): void
+    public function construct_MissingExpirationTime_ThrowsException(): void
     {
         // Assemble
         $expectedIssuerIdentifier  = 'https://example.com';
@@ -171,7 +171,7 @@ class UserIdTokenTest extends TestCase
     /**
      * @test
      */
-    public function construct_missingIssuedTime_ThrowsException(): void
+    public function construct_MissingIssuedTime_ThrowsException(): void
     {
         // Assemble
         $expectedIssuerIdentifier  = 'https://example.com';
@@ -229,7 +229,7 @@ class UserIdTokenTest extends TestCase
     /**
      * @test
      */
-    public function construct_validTokens_returnsExpectedValues(): void
+    public function construct_ValidTokens_ReturnsExpectedValues(): void
     {
         // Assert
         $currentDateTime = new DateTimeImmutable();
@@ -264,7 +264,7 @@ class UserIdTokenTest extends TestCase
     /**
      * @test
      */
-    public function construct_withMultipleAudiences_returnsExpectedValues(): void
+    public function construct_WithMultipleAudiences_ReturnsExpectedValues(): void
     {
         // Assemble
         $issuerIdentifier  = 'https://example.com';
