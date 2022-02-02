@@ -2,6 +2,7 @@
 
 namespace Pinnacle\OpenIdConnect\Tests\Unit\Tokens\Models;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Pinnacle\OpenIdConnect\Tests\Traits\GenerateUserIdJwt;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\InvalidUserIdTokenException;
@@ -200,19 +201,21 @@ class UserIdTokenTest extends TestCase
     public function construct_WithExpiredToken_ThrowsExpectedException(): void
     {
         // Assemble
+        $currentDateTime = new DateTimeImmutable();
+
         $issuerIdentifier  = 'https://example.com';
         $subjectIdentifier = '1203212312';
         $audience          = 'audience';
-        $expirationTime    = 1311281970;
-        $issuedTime        = 1311280970;
+        $expirationTime    = (new DateTimeImmutable())->setTimestamp($currentDateTime->getTimestamp() - 60);
+        $issuedTime        = (new DateTimeImmutable())->setTimestamp($currentDateTime->getTimestamp());
 
         $token = $this->generateJwtWithPayloadValues(
             [
                 'iss' => $issuerIdentifier,
                 'sub' => $subjectIdentifier,
                 'aud' => $audience,
-                'exp' => $expirationTime,
-                'iat' => $issuedTime,
+                'exp' => $expirationTime->getTimestamp(),
+                'iat' => $issuedTime->getTimestamp(),
             ]
         );
 
@@ -229,19 +232,21 @@ class UserIdTokenTest extends TestCase
     public function construct_validTokens_returnsExpectedValues(): void
     {
         // Assert
+        $currentDateTime = new DateTimeImmutable();
+
         $expectedIssuerIdentifier  = 'https://example.com';
         $expectedSubjectIdentifier = '1203212312';
         $expectedAudience          = 'sdlakjfaldj';
-        $expectedExpirationTime    = time() + 60;
-        $expectedIssuedTime        = time();
+        $expectedExpirationTime    = (new DateTimeImmutable())->setTimestamp($currentDateTime->getTimestamp() + 60);
+        $expectedIssuedTime        = (new DateTimeImmutable())->setTimestamp($currentDateTime->getTimestamp());
 
         $token = $this->generateJwtWithPayloadValues(
             [
                 'iss' => $expectedIssuerIdentifier,
                 'sub' => $expectedSubjectIdentifier,
                 'aud' => $expectedAudience,
-                'exp' => $expectedExpirationTime,
-                'iat' => $expectedIssuedTime,
+                'exp' => $expectedExpirationTime->getTimestamp(),
+                'iat' => $expectedIssuedTime->getTimestamp(),
             ]
         );
 

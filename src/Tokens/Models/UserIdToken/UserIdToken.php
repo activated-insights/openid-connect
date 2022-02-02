@@ -2,6 +2,8 @@
 
 namespace Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\InvalidUserIdTokenException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\MissingRequiredClaimKeyException;
@@ -21,9 +23,9 @@ class UserIdToken
 
     private Audiences         $audiences;
 
-    private int               $expirationTime;
+    private DateTimeInterface $expirationTime;
 
-    private int               $issuedTime;
+    private DateTimeInterface $issuedTime;
 
     /**
      * @throws InvalidUserIdTokenException
@@ -47,8 +49,14 @@ class UserIdToken
             $this->findClaimByKey(ClaimKey::SUBJECT_IDENTIFIER()->getValue())
         );
         $this->audiences         = new Audiences($this->findClaimByKey(ClaimKey::AUDIENCES()->getValue()));
-        $this->expirationTime    = (int)$this->findClaimByKey(ClaimKey::EXPIRATION_TIME()->getValue());
-        $this->issuedTime        = (int)$this->findClaimByKey(ClaimKey::ISSUED_TIME()->getValue());
+
+        $this->expirationTime = $this->convertTimestampToDateTime(
+            (int)$this->findClaimByKey(ClaimKey::EXPIRATION_TIME()->getValue())
+        );
+
+        $this->issuedTime = $this->convertTimestampToDateTime(
+            (int)$this->findClaimByKey(ClaimKey::ISSUED_TIME()->getValue())
+        );
 
         $this->assertTokenHasNotExpired();
     }
@@ -78,17 +86,17 @@ class UserIdToken
     }
 
     /**
-     * @return int
+     * @return DateTimeInterface
      */
-    public function getExpirationTime(): int
+    public function getExpirationTime(): DateTimeInterface
     {
         return $this->expirationTime;
     }
 
     /**
-     * @return int
+     * @return DateTimeInterface
      */
-    public function getIssuedTime(): int
+    public function getIssuedTime(): DateTimeInterface
     {
         return $this->issuedTime;
     }
@@ -124,14 +132,14 @@ class UserIdToken
      */
     private function assertTokenHasNotExpired(): void
     {
-        $currentTime = time();
+        $currentTime = new DateTimeImmutable();
 
         if ($currentTime >= $this->expirationTime) {
             throw new UserIdTokenHasExpiredException(
                 sprintf(
-                    'The user id token has expired. expirationTime: %u, currentTime %u',
-                    $this->expirationTime,
-                    $currentTime
+                    'The user id token has expired. expirationTime: %s, currentTime %s',
+                    $this->expirationTime->format('Y-m-d H:i:s'),
+                    $currentTime->format('Y-m-d H:i:s')
                 )
             );
         }
@@ -163,5 +171,10 @@ class UserIdToken
         }
 
         return (array)$payload;
+    }
+
+    private function convertTimestampToDateTime(int $timeStamp): DateTimeImmutable
+    {
+        return (new DateTimeImmutable())->setTimestamp($timeStamp);
     }
 }
