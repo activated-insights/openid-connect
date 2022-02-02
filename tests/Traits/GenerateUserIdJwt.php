@@ -2,6 +2,8 @@
 
 namespace Pinnacle\OpenIdConnect\Tests\Traits;
 
+use Firebase\JWT\JWT;
+
 trait GenerateUserIdJwt
 {
     private function generateRandomJwt(): string
@@ -16,11 +18,11 @@ trait GenerateUserIdJwt
     }
 
     private function generateJwtWithRequiredValues(
-        string       $issuerIdentifier,
-        string       $subjectIdentifier,
+        string $issuerIdentifier,
+        string $subjectIdentifier,
         string|array $audiences,
-        int          $expirationTime,
-        int          $issuedTime
+        int $expirationTime,
+        int $issuedTime
     ): string {
         return $this->generateJwtWithPayloadValues(
             [
@@ -35,17 +37,6 @@ trait GenerateUserIdJwt
 
     private function generateJwtWithPayloadValues(array $payloadValues): string
     {
-        $header  = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
-        $payload = json_encode($payloadValues);
-
-        $base64Header = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
-
-        $base64Payload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
-
-        $signature = hash_hmac('sha256', $base64Header . "." . $base64Payload, 'fakeKey', true);
-
-        $base64Signature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
-
-        return $base64Header . "." . $base64Payload . "." . $base64Signature;
+        return JWT::encode($payloadValues, 'fake-key', 'HS256');
     }
 }
