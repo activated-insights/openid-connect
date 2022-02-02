@@ -170,7 +170,7 @@ class UserIdToken
             throw new InvalidUserIdTokenException(sprintf('Unable to parse JSON string %s.', $payloadJsonString));
         }
 
-        return (array)$payload;
+        return is_array($payload) ? $payload : (array)$payload;
     }
 
     private function convertTimestampToDateTime(int $timeStamp): DateTimeImmutable
