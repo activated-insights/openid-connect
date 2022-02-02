@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Authorization;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Authorization;
 
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;

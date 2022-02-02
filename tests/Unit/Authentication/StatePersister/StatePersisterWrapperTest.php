@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Authentication\StatePersister;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Authentication\StatePersister;
 
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Unit\Tokens\Models;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Tokens\Models;
 
 use PHPUnit\Framework\TestCase;
-use Pinnacle\OpenIdConnect\Support\Traits\GenerateUserIdJwt;
+use Pinnacle\OpenIdConnect\Tests\Traits\GenerateUserIdJwt;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\InvalidUserIdTokenException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\MissingRequiredClaimKeyException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\UserIdTokenHasExpiredException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Tokens;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Tokens;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -17,7 +17,7 @@ use Pinnacle\OpenIdConnect\Provider\Models\ClientSecret;
 use Pinnacle\OpenIdConnect\Provider\Models\Identifier;
 use Pinnacle\OpenIdConnect\Provider\Models\ProviderConfiguration;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
-use Pinnacle\OpenIdConnect\Support\Traits\GenerateUserIdJwt;
+use Pinnacle\OpenIdConnect\Tests\Traits\GenerateUserIdJwt;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\UserIdTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Tokens\Models\Tokens;

@@ -1,9 +1,8 @@
 <?php
 
-namespace Unit\Support\Traits;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Support\Traits;
 
 use Exception;
-use phpDocumentor\Reflection\Types\ClassString;
 use PHPUnit\Framework\TestCase;
 use Pinnacle\OpenIdConnect\Support\Traits\RandomStringGenerationTrait;
 

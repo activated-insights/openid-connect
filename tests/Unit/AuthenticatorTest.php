@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit;
+namespace Pinnacle\OpenIdConnect\Tests\Unit;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
@@ -20,7 +20,7 @@ use Pinnacle\OpenIdConnect\Provider\Models\ClientSecret;
 use Pinnacle\OpenIdConnect\Provider\Models\Identifier;
 use Pinnacle\OpenIdConnect\Provider\Models\ProviderConfiguration;
 use Pinnacle\OpenIdConnect\Support\Exceptions\InsecureUriException;
-use Pinnacle\OpenIdConnect\Support\Traits\GenerateUserIdJwt;
+use Pinnacle\OpenIdConnect\Tests\Traits\GenerateUserIdJwt;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Authorization\Exceptions;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Authorization\Exceptions;
 
 use PHPUnit\Framework\TestCase;
 use Pinnacle\OpenIdConnect\Authorization\Constants\AuthenticationErrorCode;

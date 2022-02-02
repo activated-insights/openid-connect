@@ -1,6 +1,6 @@
 <?php
 
-namespace Pinnacle\OpenIdConnect\Support\Traits;
+namespace Pinnacle\OpenIdConnect\Tests\Traits;
 
 trait GenerateUserIdJwt
 {

@@ -1,10 +1,9 @@
 <?php
 
-namespace Unit\Authorization;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Authorization;
 
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
-use Pinnacle\OpenIdConnect\Authentication\Models\Challenge;
 use Pinnacle\OpenIdConnect\Authentication\Models\State;
 use Pinnacle\OpenIdConnect\Authorization\AuthorizationCodeCallbackData;
 use Pinnacle\OpenIdConnect\Authorization\Constants\AuthenticationErrorCode;

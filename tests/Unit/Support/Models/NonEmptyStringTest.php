@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Support\Models;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Support\Models;
 
 use PHPUnit\Framework\TestCase;
 use Pinnacle\OpenIdConnect\Support\Exceptions\EmptyStringException;

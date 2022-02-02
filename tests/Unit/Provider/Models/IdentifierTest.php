@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Provider\Models;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Provider\Models;
 
 use PHPUnit\Framework\TestCase;
 use Pinnacle\OpenIdConnect\Provider\Models\Identifier;
