@@ -4,6 +4,7 @@ namespace Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use Exception;
 use GuzzleHttp\Psr7\Uri;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\InvalidUserIdTokenException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\MissingRequiredClaimKeyException;
@@ -44,19 +45,23 @@ class UserIdToken
 
         $this->assertParsedValuesContainRequiredClaims();
 
-        $this->issuerIdentifier  = new Uri($this->findClaimByKey(ClaimKey::ISSUER_IDENTIFIER()->getValue()));
-        $this->subjectIdentifier = new SubjectIdentifier(
-            $this->findClaimByKey(ClaimKey::SUBJECT_IDENTIFIER()->getValue())
-        );
-        $this->audiences         = new Audiences($this->findClaimByKey(ClaimKey::AUDIENCES()->getValue()));
+        try {
+            $this->issuerIdentifier  = new Uri($this->findClaimByKey(ClaimKey::ISSUER_IDENTIFIER()->getValue()));
+            $this->subjectIdentifier = new SubjectIdentifier(
+                $this->findClaimByKey(ClaimKey::SUBJECT_IDENTIFIER()->getValue())
+            );
+            $this->audiences         = new Audiences($this->findClaimByKey(ClaimKey::AUDIENCES()->getValue()));
 
-        $this->expirationTime = $this->convertTimestampToDateTime(
-            (int)$this->findClaimByKey(ClaimKey::EXPIRATION_TIME()->getValue())
-        );
+            $this->expirationTime = $this->convertTimestampToDateTime(
+                (int)$this->findClaimByKey(ClaimKey::EXPIRATION_TIME()->getValue())
+            );
 
-        $this->issuedTime = $this->convertTimestampToDateTime(
-            (int)$this->findClaimByKey(ClaimKey::ISSUED_TIME()->getValue())
-        );
+            $this->issuedTime = $this->convertTimestampToDateTime(
+                (int)$this->findClaimByKey(ClaimKey::ISSUED_TIME()->getValue())
+            );
+        } catch (Exception $exception) {
+            throw new InvalidUserIdTokenException('Unable to initialize UserIdToken properties.', null, $exception);
+        }
 
         $this->assertTokenHasNotExpired();
     }
