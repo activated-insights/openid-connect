@@ -2,8 +2,8 @@
 
 namespace Pinnacle\OpenIdConnect\Provider\Models;
 
-use Pinnacle\OpenIdConnect\Support\Models\NonEmptyString;
+use Pinnacle\OpenIdConnect\Support\Models\FilledString;
 
-class ClientId extends NonEmptyString
+class ClientId extends FilledString
 {
 }
