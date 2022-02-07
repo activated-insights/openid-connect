@@ -169,9 +169,9 @@ class UserIdToken
             throw new InvalidUserIdTokenException(sprintf('Unable to parse base64 string %s.', $payloadBase64String));
         }
 
-        $payload = json_decode($payloadJsonString);
+        $payload = json_decode($payloadJsonString, true);
 
-        if ($payload === null) {
+        if ($payload !== null) {
             throw new InvalidUserIdTokenException(sprintf('Unable to parse JSON string %s.', $payloadJsonString));
         }
 
