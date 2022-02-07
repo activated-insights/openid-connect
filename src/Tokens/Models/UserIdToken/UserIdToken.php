@@ -178,8 +178,11 @@ class UserIdToken
         return is_array($payload) ? $payload : (array)$payload;
     }
 
+    /**
+     * @throws Exception
+     */
     private function convertTimestampToDateTime(int $timeStamp): DateTimeImmutable
     {
-        return (new DateTimeImmutable())->setTimestamp($timeStamp);
+        return new DateTimeImmutable('@' . $timeStamp);
     }
 }
