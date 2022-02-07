@@ -171,7 +171,7 @@ class UserIdToken
 
         $payload = json_decode($payloadJsonString, true);
 
-        if ($payload !== null) {
+        if ($payload === null) {
             throw new InvalidUserIdTokenException(sprintf('Unable to parse JSON string %s.', $payloadJsonString));
         }
 
