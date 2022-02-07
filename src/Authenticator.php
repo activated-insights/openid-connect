@@ -14,12 +14,11 @@ use Pinnacle\OpenIdConnect\Authorization\Exceptions\AuthorizationCodeCallbackExc
 use Pinnacle\OpenIdConnect\Authorization\Exceptions\MissingRequiredQueryParametersException;
 use Pinnacle\OpenIdConnect\Authorization\TokensResponse;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
-use Pinnacle\OpenIdConnect\Tokens\Exceptions\AccessTokenNotFoundException;
-use Pinnacle\OpenIdConnect\Tokens\TokenRequestor;
 use Pinnacle\OpenIdConnect\Support\Exceptions\InsecureUriException;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
-use Pinnacle\OpenIdConnect\UserInfo\Models\UserInfo;
-use Pinnacle\OpenIdConnect\UserInfo\RequestUserInfo;
+use Pinnacle\OpenIdConnect\Tokens\Exceptions\AccessTokenNotFoundException;
+use Pinnacle\OpenIdConnect\Tokens\Exceptions\UserIdTokenNotFoundException;
+use Pinnacle\OpenIdConnect\Tokens\TokensRequestor;
 use Psr\Log\LoggerInterface;
 
 class Authenticator
@@ -85,32 +84,22 @@ class Authenticator
     /**
      * @throws OpenIdConnectException
      * @throws AccessTokenNotFoundException
+     * @throws UserIdTokenNotFoundException
      */
     public function fetchTokensWithAuthorizationCode(
         AuthorizationCodeResponse $authorizationCodeResponse
     ): TokensResponse {
-        $tokenRequestor = new TokenRequestor(
+        $tokensRequestor = new TokensRequestor(
             $authorizationCodeResponse->getProvider(),
             $authorizationCodeResponse->getRedirectUri(),
             $authorizationCodeResponse->getChallenge(),
             $this->logger
         );
 
-        //TODO:: This will eventually return an object containing all the tokens. Currently it only returns the access token.
-        $accessToken = $tokenRequestor->fetchTokensForAuthorizationCode(
-            $authorizationCodeResponse->getAuthorizationCode()
+        $tokens = $tokensRequestor->fetchTokensForAuthorizationCode(
+            $authorizationCodeResponse->getAuthorizationCode(),
         );
 
-        return new TokensResponse($accessToken, $authorizationCodeResponse->getProvider());
-    }
-
-    public function fetchUserInformationWithAccessToken(TokensResponse $tokensResponse
-    ): UserInfo {
-        // TODO:: We will be replacing this call and instead be parsing the JWT.
-        return RequestUserInfo::execute(
-            $tokensResponse->getProvider(),
-            $tokensResponse->getAccessToken(),
-            $this->logger
-        );
+        return new TokensResponse($tokens, $authorizationCodeResponse->getProvider());
     }
 }

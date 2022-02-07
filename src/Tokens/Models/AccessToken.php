@@ -2,8 +2,8 @@
 
 namespace Pinnacle\OpenIdConnect\Tokens\Models;
 
-use Pinnacle\OpenIdConnect\Support\Models\NonEmptyString;
+use Pinnacle\OpenIdConnect\Support\Models\FilledString;
 
-class AccessToken extends NonEmptyString
+class AccessToken extends FilledString
 {
 }

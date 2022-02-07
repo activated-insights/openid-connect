@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Authentication\Constants;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Authentication\Constants;
 
 use PHPUnit\Framework\TestCase;
 use Pinnacle\OpenIdConnect\Authentication\Constants\StateKey;

@@ -13,14 +13,19 @@ use InvalidArgumentException;
 use Pinnacle\OpenIdConnect\Authentication\Models\Challenge;
 use Pinnacle\OpenIdConnect\Authorization\Models\AuthorizationCode;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
-use Pinnacle\OpenIdConnect\Tokens\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
+use Pinnacle\OpenIdConnect\Tokens\Exceptions\AccessTokenNotFoundException;
+use Pinnacle\OpenIdConnect\Tokens\Exceptions\UserIdTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Tokens\Models\AccessToken;
+use Pinnacle\OpenIdConnect\Tokens\Models\Tokens;
+use Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken\UserIdToken;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
-class TokenRequestor
+class TokensRequestor
 {
+    private const GRANT_TYPE = 'authorization_code';
+
     public function __construct(
         private ProviderConfigurationInterface $provider,
         private Uri                            $redirectUri,
@@ -32,24 +37,15 @@ class TokenRequestor
     /**
      * @throws OpenIdConnectException
      * @throws AccessTokenNotFoundException
+     * @throws UserIdTokenNotFoundException
      */
-    public function fetchTokensForAuthorizationCode(AuthorizationCode $authorizationCode): AccessToken
-    {
-        $response = $this->requestTokens($authorizationCode);
-
-        return $this->accessTokenFromJsonResponse($response);
-    }
-
-    /**
-     * @throws OpenIdConnectException
-     */
-    private function requestTokens(AuthorizationCode $authorizationCode): stdClass
+    public function fetchTokensForAuthorizationCode(AuthorizationCode $authorizationCode): Tokens
     {
         try {
             $client = new Client();
 
             $formParams = [
-                'grant_type'    => 'authorization_code',
+                'grant_type'    => self::GRANT_TYPE,
                 'client_id'     => $this->provider->getClientId()->getValue(),
                 'redirect_uri'  => (string)$this->redirectUri,
                 'code'          => $authorizationCode->getValue(),
@@ -91,7 +87,7 @@ class TokenRequestor
             $jsonObject = Utils::jsonDecode($response);
             assert($jsonObject instanceof stdClass);
 
-            return $jsonObject;
+            return $this->tokensFromJsonResponse($jsonObject);
         } catch (InvalidArgumentException $exception) {
             throw new OpenIdConnectException('Unable to parse JSON response from TOKENS endpoint.', 0, $exception);
         }
@@ -100,7 +96,7 @@ class TokenRequestor
     /**
      * @throws AccessTokenNotFoundException
      */
-    private static function accessTokenFromJsonResponse(stdClass $jsonResponse): AccessToken
+    private static function tokensFromJsonResponse(stdClass $jsonResponse): Tokens
     {
         if (!isset($jsonResponse->access_token)) {
             throw new AccessTokenNotFoundException(
@@ -108,6 +104,16 @@ class TokenRequestor
             );
         }
 
-        return new AccessToken($jsonResponse->access_token);
+        $accessToken = new AccessToken($jsonResponse->access_token);
+
+        if (!isset($jsonResponse->id_token)) {
+            throw new UserIdTokenNotFoundException(
+                sprintf('id_token not found in JSON response %s.', json_encode($jsonResponse))
+            );
+        }
+
+        $userIdToken = new UserIdToken($jsonResponse->id_token);
+
+        return new Tokens($accessToken, $userIdToken);
     }
 }

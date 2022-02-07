@@ -5,7 +5,7 @@ namespace Pinnacle\OpenIdConnect\Support\Models;
 use Assert\Assert;
 use Pinnacle\OpenIdConnect\Support\Exceptions\EmptyStringException;
 
-class NonEmptyString
+class FilledString
 {
     public function __construct(protected string $value)
     {

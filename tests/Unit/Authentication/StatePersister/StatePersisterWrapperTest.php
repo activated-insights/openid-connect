@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Authentication\StatePersister;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Authentication\StatePersister;
 
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
@@ -105,21 +105,19 @@ class StatePersisterWrapperTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $provider = new ProviderConfiguration(
             $identifier,
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $statePersisterWrapper = new StatePersisterWrapper($mockPersister, $state);
 
         // Assert
-        $mockPersister->expects($this->exactly(6))
+        $mockPersister->expects($this->exactly(5))
                       ->method('storeValue')
                       ->withConsecutive(
                           [
@@ -142,10 +140,6 @@ class StatePersisterWrapperTest extends TestCase
                               $state->getValue() . '.' . StateKey::PROVIDER_TOKEN_ENDPOINT()->getValue(),
                               (string)$tokenEndpoint,
                           ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_USER_INFO_ENDPOINT()->getValue(),
-                              (string)$userInfoEndpoint,
-                          ],
                       );
 
         // Act
@@ -165,15 +159,13 @@ class StatePersisterWrapperTest extends TestCase
         $clientSecret          = new ClientSecret('client-secret');
         $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
         $tokenEndpoint         = new Uri('https://endpoint.test/token');
-        $userInfoEndpoint      = new Uri('https://endpoint.test/user-info');
 
         $provider = new ProviderConfiguration(
             $identifier,
             $clientId,
             $clientSecret,
             $authorizationEndpoint,
-            $tokenEndpoint,
-            $userInfoEndpoint
+            $tokenEndpoint
         );
 
         $statePersisterWrapper = new StatePersisterWrapper($mockPersister, $state);
@@ -195,9 +187,6 @@ class StatePersisterWrapperTest extends TestCase
                           [
                               $state->getValue() . '.' . StateKey::PROVIDER_TOKEN_ENDPOINT()->getValue(),
                           ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_USER_INFO_ENDPOINT()->getValue(),
-                          ],
                       )
                       ->willReturnOnConsecutiveCalls(
                           $identifier->getValue(),
@@ -205,7 +194,6 @@ class StatePersisterWrapperTest extends TestCase
                           $clientSecret->getValue(),
                           (string)$authorizationEndpoint,
                           (string)$tokenEndpoint,
-                          (string)$userInfoEndpoint,
                       );
 
         // Act
@@ -220,7 +208,6 @@ class StatePersisterWrapperTest extends TestCase
             (string)$returnedProvider->getAuthorizationEndpoint()
         );
         $this->assertEquals((string)$provider->getTokenEndpoint(), (string)$returnedProvider->getTokenEndpoint());
-        $this->assertEquals((string)$provider->getUserInfoEndpoint(), (string)$returnedProvider->getUserInfoEndpoint());
     }
 
     /**

@@ -2,10 +2,10 @@
 
 namespace Pinnacle\OpenIdConnect\Authentication\Models;
 
-use Pinnacle\OpenIdConnect\Support\Models\NonEmptyString;
+use Pinnacle\OpenIdConnect\Support\Models\FilledString;
 use Pinnacle\OpenIdConnect\Support\Traits\RandomStringGenerationTrait;
 
-class Challenge extends NonEmptyString
+class Challenge extends FilledString
 {
     use RandomStringGenerationTrait;
 

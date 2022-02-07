@@ -2,8 +2,8 @@
 
 namespace Pinnacle\OpenIdConnect\Authentication\Models;
 
-use Pinnacle\OpenIdConnect\Support\Models\NonEmptyString;
+use Pinnacle\OpenIdConnect\Support\Models\FilledString;
 
-class Scope extends NonEmptyString
+class Scope extends FilledString
 {
 }

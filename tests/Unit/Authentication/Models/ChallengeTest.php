@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Authentication\Models;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Authentication\Models;
 
 use PHPUnit\Framework\TestCase;
 use Pinnacle\OpenIdConnect\Authentication\Models\Challenge;

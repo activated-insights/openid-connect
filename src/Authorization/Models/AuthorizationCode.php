@@ -2,8 +2,8 @@
 
 namespace Pinnacle\OpenIdConnect\Authorization\Models;
 
-use Pinnacle\OpenIdConnect\Support\Models\NonEmptyString;
+use Pinnacle\OpenIdConnect\Support\Models\FilledString;
 
-class AuthorizationCode extends NonEmptyString
+class AuthorizationCode extends FilledString
 {
 }

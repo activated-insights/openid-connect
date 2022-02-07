@@ -51,7 +51,6 @@ class StatePersisterWrapper
             (string)$provider->getAuthorizationEndpoint()
         );
         $this->storeValueWithKey(StateKey::PROVIDER_TOKEN_ENDPOINT(), (string)$provider->getTokenEndpoint());
-        $this->storeValueWithKey(StateKey::PROVIDER_USER_INFO_ENDPOINT(), (string)$provider->getUserInfoEndpoint());
     }
 
     /**
@@ -64,13 +63,11 @@ class StatePersisterWrapper
         $clientSecretValue          = $this->getValueWithStateKey(StateKey::PROVIDER_CLIENT_SECRET());
         $authorizationEndpointValue = $this->getValueWithStateKey(StateKey::PROVIDER_AUTHORIZATION_ENDPOINT());
         $tokenEndpointValue         = $this->getValueWithStateKey(StateKey::PROVIDER_TOKEN_ENDPOINT());
-        $userInfoEndpointValue      = $this->getValueWithStateKey(StateKey::PROVIDER_USER_INFO_ENDPOINT());
 
         if ($clientIdValue === null ||
             $clientSecretValue === null ||
             $authorizationEndpointValue === null ||
-            $tokenEndpointValue === null ||
-            $userInfoEndpointValue === null
+            $tokenEndpointValue === null
         ) {
             throw new StatePersisterMissingValueException('Unable to retrieve the provider from state store.');
         }
@@ -80,8 +77,7 @@ class StatePersisterWrapper
             new ClientId($clientIdValue),
             new ClientSecret($clientSecretValue),
             new Uri($authorizationEndpointValue),
-            new Uri($tokenEndpointValue),
-            new Uri($userInfoEndpointValue)
+            new Uri($tokenEndpointValue)
         );
     }
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Unit\Support\Models;
+namespace Pinnacle\OpenIdConnect\Tests\Unit\Support\Models;
 
 use PHPUnit\Framework\TestCase;
 use Pinnacle\OpenIdConnect\Support\Exceptions\EmptyStringException;
-use Pinnacle\OpenIdConnect\Support\Models\NonEmptyString;
+use Pinnacle\OpenIdConnect\Support\Models\FilledString;
 
-class NonEmptyStringTest extends TestCase
+class FilledStringTest extends TestCase
 {
     /**
      * @test
@@ -17,7 +17,7 @@ class NonEmptyStringTest extends TestCase
         $this->expectException(EmptyStringException::class);
 
         // Act
-        new NonEmptyString('');
+        new FilledString('');
     }
 
     /**
@@ -29,7 +29,7 @@ class NonEmptyStringTest extends TestCase
         $this->expectException(EmptyStringException::class);
 
         // Act
-        new NonEmptyString(' ');
+        new FilledString(' ');
     }
 
     /**
@@ -38,7 +38,7 @@ class NonEmptyStringTest extends TestCase
     public function construct_ValidString_getValueReturnsValue(): void
     {
         // Assert
-        $nonEmptyString = new NonEmptyString('foo');
+        $nonEmptyString = new FilledString('foo');
 
         // Act
         $this->assertEquals('foo', $nonEmptyString->getValue());
