@@ -176,7 +176,7 @@ class UserIdToken
         }
 
         if (!is_array($payload)) {
-            throw new InvalidUserIdTokenException(sprintf('Unable to parse array from %s', $payload));
+            throw new InvalidUserIdTokenException(sprintf('Unable to parse array from %s', $payloadJsonString));
         }
 
         return $payload;
