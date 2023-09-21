@@ -6,21 +6,23 @@ use Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken\UserIdToken;
 
 class Tokens
 {
-    public function __construct(private AccessToken $accessToken, private UserIdToken $userIdToken)
-    {
+    public function __construct(
+        private AccessToken   $accessToken,
+        private ?RefreshToken $refreshToken,
+        private UserIdToken   $userIdToken
+    ){
     }
 
-    /**
-     * @return AccessToken
-     */
     public function getAccessToken(): AccessToken
     {
         return $this->accessToken;
     }
 
-    /**
-     * @return UserIdToken
-     */
+    public function getRefreshToken(): ?RefreshToken
+    {
+        return $this->refreshToken;
+    }
+
     public function getUserIdToken(): UserIdToken
     {
         return $this->userIdToken;
