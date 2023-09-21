@@ -108,7 +108,7 @@ class TokensRequestor
         $accessToken = new AccessToken($jsonResponse->access_token);
 
         $refreshToken = null;
-        if (isset($jsonResponse->refresh_token)) {
+        if (isset($jsonResponse->refresh_token) && trim($jsonResponse->refresh_token) !== '') {
             $refreshToken = new RefreshToken($jsonResponse->refresh_token);
         }
 
