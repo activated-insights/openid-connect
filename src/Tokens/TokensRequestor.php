@@ -108,13 +108,10 @@ class TokensRequestor
 
         $accessToken = new AccessToken($jsonResponse->access_token);
 
-        if (!isset($jsonResponse->refresh_token)) {
-            throw new RefreshTokenNotFoundException(
-                sprintf('refresh_token not found in JSON response %s.', json_encode($jsonResponse))
-            );
+        $refreshToken = null;
+        if (isset($jsonResponse->refresh_token)) {
+            $refreshToken = new RefreshToken($jsonResponse->refresh_token);
         }
-
-        $refreshToken = new RefreshToken($jsonResponse->refresh_token);
 
         if (!isset($jsonResponse->id_token)) {
             throw new UserIdTokenNotFoundException(

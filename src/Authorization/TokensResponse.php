@@ -19,7 +19,7 @@ class TokensResponse
         return $this->tokens->getAccessToken();
     }
 
-    public function getRefreshToken(): RefreshToken
+    public function getRefreshToken(): ?RefreshToken
     {
         return $this->tokens->getRefreshToken();
     }

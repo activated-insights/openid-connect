@@ -7,9 +7,9 @@ use Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken\UserIdToken;
 class Tokens
 {
     public function __construct(
-        private AccessToken  $accessToken,
-        private RefreshToken $refreshToken,
-        private UserIdToken  $userIdToken
+        private AccessToken   $accessToken,
+        private ?RefreshToken $refreshToken,
+        private UserIdToken   $userIdToken
     ){
     }
 
@@ -18,7 +18,7 @@ class Tokens
         return $this->accessToken;
     }
 
-    public function getRefreshToken(): RefreshToken
+    public function getRefreshToken(): ?RefreshToken
     {
         return $this->refreshToken;
     }
