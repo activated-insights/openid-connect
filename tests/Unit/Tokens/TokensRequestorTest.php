@@ -21,6 +21,7 @@ use Pinnacle\OpenIdConnect\Tests\Traits\GenerateUserIdJwt;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\AccessTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\UserIdTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Tokens\Models\Tokens;
+use Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken\UserIdToken;
 use Pinnacle\OpenIdConnect\Tokens\TokensRequestor;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -150,7 +151,8 @@ class TokensRequestorTest extends TestCase
                         ->andReturn(
                             json_encode(
                                 [
-                                    'id_token' => 'fake-id-token',
+                                    'id_token'      => 'fake-id-token',
+                                    'refresh_token' => 'fake-refresh-token'
                                 ]
                             )
                         );
@@ -201,7 +203,8 @@ class TokensRequestorTest extends TestCase
                         ->andReturn(
                             json_encode(
                                 [
-                                    'access_token' => 'fake-access-token',
+                                    'access_token'  => 'fake-access-token',
+                                    'refresh_token' => 'fake-refresh-token'
                                 ]
                             )
                         );
@@ -221,6 +224,61 @@ class TokensRequestorTest extends TestCase
 
         // Act
         $tokensRequestor->fetchTokensForAuthorizationCode(new AuthorizationCode('authorization-code'));
+    }
+
+    /**
+     * @test
+     */
+    public function fetchTokensForAuthorizationCode_ResponseMissingRefreshToken_ReturnsNullRefreshToken(): void
+    {
+        // Assemble
+        $identifier            = new Identifier('identifier');
+        $clientId              = new ClientId('client-id');
+        $clientSecret          = new ClientSecret('client-secret');
+        $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
+        $tokenEndpoint         = new Uri('https://endpoint.test/token');
+
+        $provider = new ProviderConfiguration(
+            $identifier,
+            $clientId,
+            $clientSecret,
+            $authorizationEndpoint,
+            $tokenEndpoint
+        );
+
+        $redirectUri = new Uri('https//endpoint.test/redirect');
+
+        $challenge = Challenge::createWithRandomString();
+
+        $streamInterface = Mockery::spy(StreamInterface::class);
+        $streamInterface->shouldReceive('getContents')
+            ->andReturn(
+                json_encode(
+                    [
+                        'id_token'     => $userIdToken = $this->generateRandomJwt(),
+                        'access_token' => $accessToken = 'fake-access-token'
+                    ]
+                )
+            );
+
+        $requestMock = Mockery::spy(RequestInterface::class);
+        $requestMock->shouldReceive('getBody')
+            ->andReturn($streamInterface);
+
+        $clientMock = Mockery::spy('overload:' . Client::class);
+        $clientMock->shouldReceive('request')
+            ->andReturn($requestMock);
+
+        $tokensRequestor = new TokensRequestor($provider, $redirectUri, $challenge);
+
+        // Act
+        $tokens = $tokensRequestor->fetchTokensForAuthorizationCode(new AuthorizationCode('authorization-code'));
+
+        // Assert
+        $this->assertInstanceOf(Tokens::class, $tokens);
+        $this->assertEquals($tokens->getUserIdToken(), new UserIdToken($userIdToken));
+        $this->assertSame($tokens->getAccessToken()->getValue(), $accessToken);
+        $this->assertSame($tokens->getRefreshToken(), null);
     }
 
     /**
@@ -252,8 +310,9 @@ class TokensRequestorTest extends TestCase
                         ->andReturn(
                             json_encode(
                                 [
-                                    'id_token'     => $this->generateRandomJwt(),
-                                    'access_token' => 'fake-access-token',
+                                    'id_token'      => $userIdToken  = $this->generateRandomJwt(),
+                                    'access_token'  => $accessToken  = 'fake-access-token',
+                                    'refresh_token' => $refreshToken = 'fake-refresh-token',
                                 ]
                             )
                         );
@@ -273,5 +332,8 @@ class TokensRequestorTest extends TestCase
 
         // Assert
         $this->assertInstanceOf(Tokens::class, $tokens);
+        $this->assertEquals($tokens->getUserIdToken(), new UserIdToken($userIdToken));
+        $this->assertSame($tokens->getAccessToken()->getValue(), $accessToken);
+        $this->assertSame($tokens->getRefreshToken()->getValue(), $refreshToken);
     }
 }
