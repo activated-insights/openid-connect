@@ -15,8 +15,10 @@ use Pinnacle\OpenIdConnect\Authorization\Models\AuthorizationCode;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\AccessTokenNotFoundException;
+use Pinnacle\OpenIdConnect\Tokens\Exceptions\RefreshTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\UserIdTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Tokens\Models\AccessToken;
+use Pinnacle\OpenIdConnect\Tokens\Models\RefreshToken;
 use Pinnacle\OpenIdConnect\Tokens\Models\Tokens;
 use Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken\UserIdToken;
 use Psr\Log\LoggerInterface;
@@ -106,6 +108,14 @@ class TokensRequestor
 
         $accessToken = new AccessToken($jsonResponse->access_token);
 
+        if (!isset($jsonResponse->refresh_token)) {
+            throw new RefreshTokenNotFoundException(
+                sprintf('refresh_token not found in JSON response %s.', json_encode($jsonResponse))
+            );
+        }
+
+        $refreshToken = new RefreshToken($jsonResponse->refresh_token);
+
         if (!isset($jsonResponse->id_token)) {
             throw new UserIdTokenNotFoundException(
                 sprintf('id_token not found in JSON response %s.', json_encode($jsonResponse))
@@ -114,6 +124,6 @@ class TokensRequestor
 
         $userIdToken = new UserIdToken($jsonResponse->id_token);
 
-        return new Tokens($accessToken, $userIdToken);
+        return new Tokens($accessToken, $refreshToken, $userIdToken);
     }
 }

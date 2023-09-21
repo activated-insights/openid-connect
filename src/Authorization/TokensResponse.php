@@ -4,6 +4,7 @@ namespace Pinnacle\OpenIdConnect\Authorization;
 
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Tokens\Models\AccessToken;
+use Pinnacle\OpenIdConnect\Tokens\Models\RefreshToken;
 use Pinnacle\OpenIdConnect\Tokens\Models\Tokens;
 use Pinnacle\OpenIdConnect\Tokens\Models\UserIdToken\UserIdToken;
 
@@ -16,6 +17,11 @@ class TokensResponse
     public function getAccessToken(): AccessToken
     {
         return $this->tokens->getAccessToken();
+    }
+
+    public function getRefreshToken(): RefreshToken
+    {
+        return $this->tokens->getRefreshToken();
     }
 
     public function getUserIdToken(): UserIdToken
