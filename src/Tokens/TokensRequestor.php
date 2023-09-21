@@ -15,7 +15,6 @@ use Pinnacle\OpenIdConnect\Authorization\Models\AuthorizationCode;
 use Pinnacle\OpenIdConnect\Provider\Contracts\ProviderConfigurationInterface;
 use Pinnacle\OpenIdConnect\Support\Exceptions\OpenIdConnectException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\AccessTokenNotFoundException;
-use Pinnacle\OpenIdConnect\Tokens\Exceptions\RefreshTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Tokens\Exceptions\UserIdTokenNotFoundException;
 use Pinnacle\OpenIdConnect\Tokens\Models\AccessToken;
 use Pinnacle\OpenIdConnect\Tokens\Models\RefreshToken;
