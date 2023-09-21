@@ -57,7 +57,7 @@ class TokensResponseTest extends TestCase
     /**
      * @test
      */
-    public function getRefreshToken_ReturnsExpectedAccessToken(): void
+    public function getRefreshToken_ReturnsExpectedRefreshToken(): void
     {
         // Assemble
         $identifier            = new Identifier('identifier');
