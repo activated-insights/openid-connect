@@ -83,7 +83,7 @@ class TokensResponseTest extends TestCase
         $tokensResponse = new TokensResponse($tokens, $providerConfiguration);
 
         // Act
-        $returnedRefreshToken  = $tokensResponse->getRefreshToken();
+        $returnedRefreshToken = $tokensResponse->getRefreshToken();
 
         // Assert
         $this->assertSame($refreshToken, $returnedRefreshToken);
