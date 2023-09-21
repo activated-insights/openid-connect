@@ -60,7 +60,7 @@ $providerId = $tokensResponse->getProvider()->getIdentifier();
 $accessToken = $tokensResponse->getAccessToken();
 
 // Get refresh_token.
-$accessToken = $tokensResponse->getRefreshToken();
+$refreshToken = $tokensResponse->getRefreshToken();
 
 // Get id_token.
 $userIdToken = $tokensResponse->getUserIdToken();
