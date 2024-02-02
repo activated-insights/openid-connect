@@ -8,7 +8,7 @@ use Stringable;
 
 class TestLogger extends AbstractLogger
 {
-    public string $latestLevel = '';
+    public string $latestLevel   = '';
 
     public string $latestMessage = '';
 
