@@ -21,8 +21,10 @@ use Pinnacle\OpenIdConnect\Provider\Models\Identifier;
 use Pinnacle\OpenIdConnect\Provider\Models\ProviderConfiguration;
 use Pinnacle\OpenIdConnect\Support\Exceptions\InsecureUriException;
 use Pinnacle\OpenIdConnect\Tests\Traits\GenerateUserIdJwt;
+use Pinnacle\OpenIdConnect\Tests\Unit\Logger\TestLogger;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Log\LogLevel;
 
 class AuthenticatorTest extends TestCase
 {
@@ -221,12 +223,15 @@ class AuthenticatorTest extends TestCase
 
         $statePersister = $this->getMockBuilder(StatePersisterInterface::class)->getMock();
 
-        $authenticator = new Authenticator($statePersister);
+        $logger        = new TestLogger();
+        $authenticator = new Authenticator($statePersister, $logger);
 
         // Act
         $tokensResponse = $authenticator->fetchTokensWithAuthorizationCode($authorizationCodeResponse);
 
         // Assert
         $this->assertInstanceOf(TokensResponse::class, $tokensResponse);
+        $this->assertSame(LogLevel::DEBUG, $logger->latestLevel);
+        $this->assertStringContainsString('OIDC: Received OAuth TOKENS endpoint response:', $logger->latestMessage);
     }
 }
