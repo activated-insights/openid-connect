@@ -2,7 +2,6 @@
 
 namespace Pinnacle\OpenIdConnect\Support\Models;
 
-use Assert\Assert;
 use Pinnacle\OpenIdConnect\Support\Exceptions\EmptyStringException;
 
 class FilledString
