@@ -27,7 +27,7 @@ jobs:
           path: vendor
           key: composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            composer-${{ matrix.php }}-
+            composer-${{ matrix.php }}
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --no-progress
@@ -36,6 +36,7 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Monitor coverage
+        if: github.event_name == 'pull_request'
         uses: slavcodev/coverage-monitor-action@1.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
