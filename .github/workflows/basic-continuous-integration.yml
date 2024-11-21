@@ -1,6 +1,10 @@
 name: Basic Continuous Integration
 
-on: [ pull_request ]
+on:
+  pull_request:
+  push:
+    branches:
+      - release
 
 jobs:
   phpunit-unit:

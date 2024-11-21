@@ -1,22 +1,13 @@
-<h1 align="center">Openid-Connect</h1>
+# OpenID Connect 1.0 Library for PHP
 
-[![Basic Continuous Integration](https://github.com/pinnacleqi/openid-connect/actions/workflows/basic-continuous-integration.yml/badge.svg)](https://github.com/pinnacleqi/openid-connect/actions/workflows/basic-continuous-integration.yml)
+[![Basic Continuous Integration](https://github.com/activated-insights/openid-connect/actions/workflows/basic-continuous-integration.yml/badge.svg?branch=release)](https://github.com/activated-insights/openid-connect/actions/workflows/basic-continuous-integration.yml)
 
 ## Installation
 
-In your composer.json add the following to your "repositories" field:
-
-```json
-"openid-connect": {
-"type": "vcs",
-"url": "https://github.com/pinnacleqi/openid-connect"
-}
-```
-
-Then run
-
+Add this repository to composer and then install the package:
 ```sh
-composer require pinnacle/openid-connect
+composer config repositories.openid-connect vcs https://github.com/activated-insights/openid-connect
+composer require activated-insights/openid-connect
 ```
 
 ## Basic Usage
@@ -74,6 +65,4 @@ $claimExists = $userIdToken->hasClaimKey('foo');
 // Access claims from the id_token (Returns null if the requested claim cannot be found).
 $nameClaim  = $userIdToken->findClaimByKey('name');
 $emailClaim = $userIdToken->findClaimByKey('email');
-
-
 ```
