@@ -116,31 +116,39 @@ class StatePersisterWrapperTest extends TestCase
 
         $statePersisterWrapper = new StatePersisterWrapper($mockPersister, $state);
 
+        $expectedCalls = [
+            [
+                $state->getValue() . '.' . StateKey::PROVIDER_IDENTIFIER()->getValue(),
+                $identifier->getValue(),
+            ],
+            [
+                $state->getValue() . '.' . StateKey::PROVIDER_CLIENT_ID()->getValue(),
+                $clientId->getValue(),
+            ],
+            [
+                $state->getValue() . '.' . StateKey::PROVIDER_CLIENT_SECRET()->getValue(),
+                $clientSecret->getValue(),
+            ],
+            [
+                $state->getValue() . '.' . StateKey::PROVIDER_AUTHORIZATION_ENDPOINT()->getValue(),
+                (string)$authorizationEndpoint,
+            ],
+            [
+                $state->getValue() . '.' . StateKey::PROVIDER_TOKEN_ENDPOINT()->getValue(),
+                (string)$tokenEndpoint,
+            ],
+        ];
+
         // Assert
-        $mockPersister->expects($this->exactly(5))
-                      ->method('storeValue')
-                      ->withConsecutive(
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_IDENTIFIER()->getValue(),
-                              $identifier->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_CLIENT_ID()->getValue(),
-                              $clientId->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_CLIENT_SECRET()->getValue(),
-                              $clientSecret->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_AUTHORIZATION_ENDPOINT()->getValue(),
-                              (string)$authorizationEndpoint,
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_TOKEN_ENDPOINT()->getValue(),
-                              (string)$tokenEndpoint,
-                          ],
-                      );
+        $mockPersister->expects($this->exactly(count($expectedCalls)))
+            ->method('storeValue')
+            ->willReturnCallback(function ($key, $value) use (&$expectedCalls) {
+                $expectedCall = array_shift($expectedCalls);
+
+                // Verify the arguments
+                $this->assertSame($expectedCall[0], $key);
+                $this->assertSame($expectedCall[1], $value);
+            });
 
         // Act
         $statePersisterWrapper->storeProvider($provider);
@@ -170,31 +178,40 @@ class StatePersisterWrapperTest extends TestCase
 
         $statePersisterWrapper = new StatePersisterWrapper($mockPersister, $state);
 
+        $expectedCalls = [
+            [
+                $state->getValue() . '.' . StateKey::PROVIDER_IDENTIFIER()->getValue(),
+                $identifier->getValue(),
+            ],
+            [
+                $state->getValue() . '.' . StateKey::PROVIDER_CLIENT_ID()->getValue(),
+                $clientId->getValue(),
+            ],
+            [
+                $state->getValue() . '.' . StateKey::PROVIDER_CLIENT_SECRET()->getValue(),
+                $clientSecret->getValue(),
+            ],
+            [
+                $state->getValue() . '.' . StateKey::PROVIDER_AUTHORIZATION_ENDPOINT()->getValue(),
+                (string)$authorizationEndpoint,
+            ],
+            [
+                $state->getValue() . '.' . StateKey::PROVIDER_TOKEN_ENDPOINT()->getValue(),
+                (string)$tokenEndpoint,
+            ],
+        ];
+
         $mockPersister->method('getValue')
-                      ->withConsecutive(
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_IDENTIFIER()->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_CLIENT_ID()->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_CLIENT_SECRET()->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_AUTHORIZATION_ENDPOINT()->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_TOKEN_ENDPOINT()->getValue(),
-                          ],
-                      )
-                      ->willReturnOnConsecutiveCalls(
-                          $identifier->getValue(),
-                          $clientId->getValue(),
-                          $clientSecret->getValue(),
-                          (string)$authorizationEndpoint,
-                          (string)$tokenEndpoint,
-                      );
+            ->willReturnCallback(function ($key) use (&$expectedCalls) {
+                $expectedCall = array_shift($expectedCalls);
+
+                // Verify the arguments
+                $this->assertSame($expectedCall[0], $key);
+
+                // Return the corresponding value
+                return $expectedCall[1];
+            });
+
 
         // Act
         $returnedProvider = $statePersisterWrapper->getProvider();
@@ -221,35 +238,25 @@ class StatePersisterWrapperTest extends TestCase
 
         $statePersisterWrapper = new StatePersisterWrapper($mockPersister, $state);
 
+        $expectedCalls = [
+            [$state->getValue() . '.' . StateKey::PROVIDER_IDENTIFIER()->getValue(), null],
+            [$state->getValue() . '.' . StateKey::PROVIDER_CLIENT_ID()->getValue(), null],
+            [$state->getValue() . '.' . StateKey::PROVIDER_CLIENT_SECRET()->getValue(), null],
+            [$state->getValue() . '.' . StateKey::PROVIDER_AUTHORIZATION_ENDPOINT()->getValue(), null],
+            [$state->getValue() . '.' . StateKey::PROVIDER_TOKEN_ENDPOINT()->getValue(), null],
+            [$state->getValue() . '.' . StateKey::PROVIDER_USER_INFO_ENDPOINT()->getValue(), null],
+        ];
+
         $mockPersister->method('getValue')
-                      ->withConsecutive(
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_IDENTIFIER()->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_CLIENT_ID()->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_CLIENT_SECRET()->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_AUTHORIZATION_ENDPOINT()->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_TOKEN_ENDPOINT()->getValue(),
-                          ],
-                          [
-                              $state->getValue() . '.' . StateKey::PROVIDER_USER_INFO_ENDPOINT()->getValue(),
-                          ],
-                      )
-                      ->willReturnOnConsecutiveCalls(
-                          null,
-                          null,
-                          null,
-                          null,
-                          null,
-                          null,
-                      );
+            ->willReturnCallback(function ($key) use (&$expectedCalls) {
+                $expectedCall = array_shift($expectedCalls);
+
+                // Verify the arguments
+                $this->assertSame($expectedCall[0], $key);
+
+                // Return null as expected for this test
+                return $expectedCall[1];
+            });
 
         // Assert
         $this->expectException(StatePersisterMissingValueException::class);

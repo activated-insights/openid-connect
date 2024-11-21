@@ -1,11 +1,15 @@
 name: Basic Continuous Integration
 
-on: [ push ]
+on: [ pull_request ]
 
 jobs:
   phpunit-unit:
     name: PHPUnit Unit Tests
     runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        php: ['8.0', '8.1', '8.2', '8.3']
 
     steps:
       - name: Checkout Code
@@ -14,15 +18,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: ${{ matrix.php }}
           ini-values: assert.exception=1, zend.assertions=1
-
-      - name: Cache Composer packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.composer/cache/files
-          key: composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: composer-
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --no-progress
@@ -31,12 +28,11 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Monitor coverage
-
         if: github.event_name == 'pull_request'
-
         uses: slavcodev/coverage-monitor-action@1.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           clover_file: coverage.xml
           threshold_alert: 0
           threshold_warning: 95
+          comment_context: PHP ${{ matrix.php }} Coverage Report
