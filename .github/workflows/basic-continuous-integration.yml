@@ -26,8 +26,7 @@ jobs:
         with:
           path: vendor
           key: composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            composer-${{ matrix.php }}
+          restore-keys: composer-${{ matrix.php }}-
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --no-progress
