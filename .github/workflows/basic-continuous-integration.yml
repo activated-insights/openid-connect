@@ -24,7 +24,7 @@ jobs:
       - name: Cache Composer packages
         uses: actions/cache@v2
         with:
-          path: vendor
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: composer-${{ matrix.php }}-
 
