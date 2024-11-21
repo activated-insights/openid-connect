@@ -36,6 +36,7 @@ jobs:
 
       - name: Monitor coverage
         if: github.event_name == 'pull_request'
+        comment_context: PHP ${{ matrix.php }} Coverage Report
         uses: slavcodev/coverage-monitor-action@1.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
