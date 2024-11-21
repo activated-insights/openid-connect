@@ -24,7 +24,7 @@ jobs:
       - name: Cache Composer packages
         uses: actions/cache@v2
         with:
-          path: ~/.composer/cache/files
+          path: vendor
           key: composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             composer-${{ matrix.php }}-
@@ -36,7 +36,6 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Monitor coverage
-        if: github.event_name == 'pull_request'
         uses: slavcodev/coverage-monitor-action@1.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
