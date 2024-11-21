@@ -21,18 +21,6 @@ jobs:
           php-version: ${{ matrix.php }}
           ini-values: assert.exception=1, zend.assertions=1
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache Composer packages
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
-          restore-keys: composer-${{ matrix.php }}-
-
       - name: Install Composer dependencies
         run: composer install --no-interaction --no-progress
 
