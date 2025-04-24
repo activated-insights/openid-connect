@@ -7,7 +7,8 @@
 Add this repository to composer and then install the package:
 ```sh
 composer config repositories.openid-connect vcs https://github.com/activated-insights/openid-connect
-composer require activated-insights/openid-connect
+composer config repositories.common-value-objects vcs https://github.com/activated-insights/common-value-objects
+composer require pinnacle/openid-connect
 ```
 
 ## Basic Usage
