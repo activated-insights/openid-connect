@@ -186,10 +186,10 @@ class AuthenticationUriBuilderTest extends TestCase
 
         $redirectUri = new Uri('https://uri.test/redirect');
 
-        $authenticationUriBuilder = new AuthenticationUriBuilder($provider, $redirectUri, false);
+        $authenticationUriBuilder = new AuthenticationUriBuilder($provider, $redirectUri);
 
         // Act
-        $generatedUri = $authenticationUriBuilder->withScopes('foo', 'bar')->uri();
+        $generatedUri = $authenticationUriBuilder->withoutScopes('openid')->withScopes('foo', 'bar')->uri();
 
         $this->assertEquals($authorizationEndpoint->getHost(), $generatedUri->getHost());
         $this->assertEquals($authorizationEndpoint->getAuthority(), $generatedUri->getAuthority());

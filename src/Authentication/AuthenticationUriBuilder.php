@@ -26,12 +26,9 @@ class AuthenticationUriBuilder
     /**
      * @throws OpenIdConnectException
      */
-    public function __construct(
-        private ProviderConfigurationInterface $provider,
-        private Uri                            $redirectUri,
-        bool                                   $withDefaultScopes = true,
-    ) {
-        $this->scopes        = new Scopes($withDefaultScopes);
+    public function __construct(private ProviderConfigurationInterface $provider, private Uri $redirectUri)
+    {
+        $this->scopes        = new Scopes();
         $this->state         = State::createWithRandomString();
         $this->codeChallenge = Challenge::createWithRandomString();
     }
@@ -50,6 +47,15 @@ class AuthenticationUriBuilder
     {
         foreach ($scopes as $scope) {
             $this->scopes->addScope(new Scope($scope));
+        }
+
+        return $this;
+    }
+
+    public function withoutScopes(string ...$scopes): self
+    {
+        foreach ($scopes as $scope) {
+            $this->scopes->removeScope(new Scope($scope));
         }
 
         return $this;
