@@ -23,6 +23,18 @@ class ScopesTest extends TestCase
     /**
      * @test
      */
+    public function construct_CreatesScopesWithoutDefaults(): void
+    {
+        // Assemble
+        $scopes = new Scopes(false);
+
+        // Assert
+        $this->assertEquals('', $scopes->getScopesAsString());
+    }
+
+    /**
+     * @test
+     */
     public function addScope_RandomScope_ExpectDefaultWithNewScope(): void
     {
         // Assemble
@@ -33,6 +45,21 @@ class ScopesTest extends TestCase
 
         // Assert
         $this->assertEquals('openid foo', $scopes->getScopesAsString());
+    }
+
+    /**
+     * @test
+     */
+    public function addScope_RandomScope_ExpectNewScopeWithoutDefault(): void
+    {
+        // Assemble
+        $scopes = new Scopes(false);
+
+        // Act
+        $scopes->addScope(new Scope('foo'));
+
+        // Assert
+        $this->assertEquals('foo', $scopes->getScopesAsString());
     }
 
     /**
@@ -49,5 +76,21 @@ class ScopesTest extends TestCase
 
         // Assert
         $this->assertEquals('openid foo bar', $scopes->getScopesAsString());
+    }
+
+    /**
+     * @test
+     */
+    public function addScope_MultipleScopes_ExpectNewScopesWithoutDefault(): void
+    {
+        // Assemble
+        $scopes = new Scopes(false);
+
+        // Act
+        $scopes->addScope(new Scope('foo'));
+        $scopes->addScope(new Scope('bar'));
+
+        // Assert
+        $this->assertEquals('foo bar', $scopes->getScopesAsString());
     }
 }

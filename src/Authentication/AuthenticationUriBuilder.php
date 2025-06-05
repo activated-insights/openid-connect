@@ -19,6 +19,8 @@ class AuthenticationUriBuilder
 
     private Scopes    $scopes;
 
+    private bool      $withDefaultScopes = true;
+
     private State     $state;
 
     private Challenge $codeChallenge;
@@ -43,8 +45,19 @@ class AuthenticationUriBuilder
         return $this->codeChallenge;
     }
 
+    public function withoutDefaultScope(): self
+    {
+        $this->withDefaultScopes = false;
+
+        return $this;
+    }
+
     public function withScopes(string ...$scopes): self
     {
+        if ($this->withDefaultScopes === false) {
+            $this->scopes = new Scopes(false);
+        }
+
         foreach ($scopes as $scope) {
             $this->scopes->addScope(new Scope($scope));
         }

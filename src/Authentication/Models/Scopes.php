@@ -11,12 +11,14 @@ class Scopes
      */
     private array $scopes;
 
-    public function __construct()
+    public function __construct(bool $withDefaultScopes = true)
     {
         $this->scopes = [];
 
-        foreach (self::DEFAULT_SCOPES as $defaultScope) {
-            $this->addScope(new Scope($defaultScope));
+        if ($withDefaultScopes === true) {
+            foreach (self::DEFAULT_SCOPES as $defaultScope) {
+                $this->addScope(new Scope($defaultScope));
+            }
         }
     }
 
