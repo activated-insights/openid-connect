@@ -19,8 +19,6 @@ class AuthenticationUriBuilder
 
     private Scopes    $scopes;
 
-    private bool      $withDefaultScopes = true;
-
     private State     $state;
 
     private Challenge $codeChallenge;

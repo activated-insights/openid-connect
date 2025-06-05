@@ -36,12 +36,13 @@ class Authenticator
     public function beginAuthentication(
         Uri                            $redirectUri,
         ProviderConfigurationInterface $provider,
+        bool                           $withDefaultScopes = true,
     ): AuthenticationUriBuilder {
         if ($redirectUri->getScheme() !== 'https') {
             throw new InsecureUriException('Redirect URI must use https.');
         }
 
-        $authenticationUriBuilder = new AuthenticationUriBuilder($provider, $redirectUri);
+        $authenticationUriBuilder = new AuthenticationUriBuilder($provider, $redirectUri, $withDefaultScopes);
 
         $state     = $authenticationUriBuilder->getState();
         $challenge = $authenticationUriBuilder->getCodeChallenge();
