@@ -52,6 +52,15 @@ class AuthenticationUriBuilder
         return $this;
     }
 
+    public function withoutScopes(string ...$scopes): self
+    {
+        foreach ($scopes as $scope) {
+            $this->scopes->removeScope(new Scope($scope));
+        }
+
+        return $this;
+    }
+
     public function uri(): Uri
     {
         return $this->provider->getAuthorizationEndpoint()->withQuery(Query::build($this->buildParameters()));

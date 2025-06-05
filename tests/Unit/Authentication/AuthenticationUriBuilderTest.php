@@ -163,4 +163,48 @@ class AuthenticationUriBuilderTest extends TestCase
         $this->assertEquals('S256', $generatedQuery['code_challenge_method']);
         $this->assertEquals(43, strlen($generatedQuery['code_challenge']));
     }
+
+    /**
+     * @test
+     */
+    public function uri_WithoutDefaultScopeAndWithAdditionalScopes_ReturnsExpectedUri(): void
+    {
+        // Assemble
+        $identifier            = new Identifier('identifier');
+        $clientId              = new ClientId('client-id');
+        $clientSecret          = new ClientSecret('client-secret');
+        $authorizationEndpoint = new Uri('https://endpoint.test/authorization');
+        $tokenEndpoint         = new Uri('https://endpoint.test/token');
+
+        $provider = new ProviderConfiguration(
+            $identifier,
+            $clientId,
+            $clientSecret,
+            $authorizationEndpoint,
+            $tokenEndpoint
+        );
+
+        $redirectUri = new Uri('https://uri.test/redirect');
+
+        $authenticationUriBuilder = new AuthenticationUriBuilder($provider, $redirectUri);
+
+        // Act
+        $generatedUri = $authenticationUriBuilder->withoutScopes('openid')->withScopes('foo', 'bar')->uri();
+
+        $this->assertEquals($authorizationEndpoint->getHost(), $generatedUri->getHost());
+        $this->assertEquals($authorizationEndpoint->getAuthority(), $generatedUri->getAuthority());
+        $this->assertEquals($authorizationEndpoint->getFragment(), $generatedUri->getFragment());
+        $this->assertEquals($authorizationEndpoint->getPath(), $generatedUri->getPath());
+        $this->assertEquals($authorizationEndpoint->getScheme(), $generatedUri->getScheme());
+
+        parse_str($generatedUri->getQuery(), $generatedQuery);
+
+        $this->assertEquals('code', $generatedQuery['response_type']);
+        $this->assertEquals($clientId->getValue(), $generatedQuery['client_id']);
+        $this->assertEquals((string)$redirectUri, $generatedQuery['redirect_uri']);
+        $this->assertEquals('foo bar', $generatedQuery['scope']);
+        $this->assertEquals(16, strlen($generatedQuery['state']));
+        $this->assertEquals('S256', $generatedQuery['code_challenge_method']);
+        $this->assertEquals(43, strlen($generatedQuery['code_challenge']));
+    }
 }

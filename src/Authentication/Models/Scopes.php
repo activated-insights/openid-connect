@@ -25,6 +25,13 @@ class Scopes
         $this->scopes[] = $scope;
     }
 
+    public function removeScope(Scope $scope): void
+    {
+        $this->scopes = array_filter($this->scopes, function (Scope $existingScope) use ($scope) {
+            return $existingScope->getValue() !== $scope->getValue();
+        });
+    }
+
     public function getScopesAsString(): string
     {
         $scopeValues = [];

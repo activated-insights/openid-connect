@@ -50,4 +50,36 @@ class ScopesTest extends TestCase
         // Assert
         $this->assertEquals('openid foo bar', $scopes->getScopesAsString());
     }
+
+    /**
+     * @test
+     */
+    public function removeScope_DefaultScope_RemovesDefaultScope(): void
+    {
+        // Assemble
+        $scopes = new Scopes();
+
+        // Act
+        $scopes->removeScope(new Scope('openid'));
+
+        // Assert
+        $this->assertEquals('', $scopes->getScopesAsString());
+    }
+
+    /**
+     * @test
+     */
+    public function removeScopeThenAddScope_MultipleScopes_RemovesDefaultScopeAndAddsNewScopes(): void
+    {
+        // Assemble
+        $scopes = new Scopes();
+
+        // Act
+        $scopes->removeScope(new Scope('openid'));
+        $scopes->addScope(new Scope('foo'));
+        $scopes->addScope(new Scope('bar'));
+
+        // Assert
+        $this->assertEquals('foo bar', $scopes->getScopesAsString());
+    }
 }

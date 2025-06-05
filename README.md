@@ -31,7 +31,7 @@ $authenticator =  new Authenticator(
 
 $authenticationRedirectUri = $authenticator
     ->beginAuthentication($providerConfiguration, $redirectUrl)
-    ->withScopes('profile', 'email', 'phone')
+    ->withScopes('profile', 'email', 'phone') // use ->withoutScopes('openid') to remove the default openid scope if needed.
     ->uri();
 ```
 
