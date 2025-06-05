@@ -30,8 +30,8 @@ $authenticator =  new Authenticator(
 );
 
 $authenticationRedirectUri = $authenticator
-    ->beginAuthentication($providerConfiguration, $redirectUrl) // you can pass false as the 3rd parameter to skip the default openid scope.
-    ->withScopes('profile', 'email', 'phone')
+    ->beginAuthentication($providerConfiguration, $redirectUrl)
+    ->withScopes('profile', 'email', 'phone') // use ->withoutScopes('openid') to remove the default openid scope if needed.
     ->uri();
 ```
 
